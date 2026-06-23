@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.class_name }} - ECMS{% endblock %}
+{% block header_title %}{{ course.class_name }}{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">Classes /</span> {{ course.class_name }}
+</h4>
+
+<div class="row">
+    <!-- Enrolled Students Table -->
+    <div class="col-md-8 mb-4">
+        <div class="card h-100">
+            <h5 class="card-header">Enrolled Students</h5>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Gender</th>
+                            <th>Parent Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for enrollment in enrollments %}
+                        <tr>
+                            <td><strong>{{ enrollment.student.name }}</strong></td>
+                            <td>{{ enrollment.student.get_gender_display }}</td>
+                            <td>{{ enrollment.student.parent_phone }}</td>
+                            <td>
+                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger"><i class="bx bx-user-minus"></i> Remove</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">No students enrolled in this class yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Links & Stats -->
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-white mb-2">Total Enrolled</h5>
+                <h1 class="display-4 fw-bold text-white mb-0">{{ enrollments.count }}</h1>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h5 class="card-header">Quick Links</h5>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'management:attendance_view' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div><i class="bx bx-calendar-check text-success me-2"></i> Take Attendance</div>
+                        <i class="bx bx-chevron-right text-muted"></i>
+                    </a>
+                    <a href="{% url 'management:homework_view' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div><i class="bx bx-edit-alt text-warning me-2"></i> Manage Homework</div>
+                        <i class="bx bx-chevron-right text-muted"></i>
+                    </a>
+                    <a href="{% url 'management:material_view' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div><i class="bx bx-folder-open text-info me-2"></i> View Materials</div>
+                        <i class="bx bx-chevron-right text-muted"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

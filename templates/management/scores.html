@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Scores - ECMS{% endblock %}
+{% block header_title %}Score Management{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Academics /</span> Scores</h4>
+
+<div class="row">
+    <!-- Averages Table -->
+    <div class="col-md-5 mb-4">
+        <div class="card h-100">
+            <h5 class="card-header">Student Averages</h5>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Average Score</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for student in student_averages %}
+                        <tr>
+                            <td><strong>{{ student.student__name }}</strong></td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="progress w-100 me-3" style="height: 8px;">
+                                        <div class="progress-bar {% if student.average >= 85 %}bg-success{% elif student.average >= 60 %}bg-primary{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ student.average }}%;" aria-valuenow="{{ student.average }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="fw-medium">{{ student.average|floatformat:1 }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center py-4 text-muted">No averages calculated yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Scores Table -->
+    <div class="col-md-7 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Individual Scores</h5>
+                <button class="btn btn-primary btn-sm"><i class="bx bx-plus"></i> Add Score</button>
+            </div>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Class</th>
+                            <th>Assessment</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for score in scores %}
+                        <tr>
+                            <td><strong>{{ score.student.name }}</strong></td>
+                            <td>{{ score.course.class_name }}</td>
+                            <td><span class="badge bg-label-info">{{ score.score_type }}</span></td>
+                            <td class="fw-bold">{{ score.value|floatformat:1 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="bx bx-award fs-1 d-block mb-3"></i>
+                                No scores recorded yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

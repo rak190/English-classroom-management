@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Report - {{ student.name }}</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'sneat/vendor/css/core.css' %}" />
+    <link rel="stylesheet" href="{% static 'sneat/vendor/fonts/boxicons.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/genz.css' %}">
+    
+    <style>
+        body {
+            background-color: #f8fafc;
+            padding: 2rem;
+        }
+        .report-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 3rem;
+            border: 1px solid #e2e8f0;
+        }
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        @media print {
+            body { background-color: white; padding: 0; }
+            .report-container { box-shadow: none; border: none; padding: 0; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mb-3 text-center no-print">
+        <button onclick="window.print()" class="btn btn-primary"><i class="bx bx-printer me-2"></i> Print / Save as PDF</button>
+        <a href="{% url 'management:student_list' %}" class="btn btn-outline-secondary ms-2">Back to Students</a>
+    </div>
+
+    <div class="report-container">
+        <!-- Header -->
+        <div class="report-header">
+            <div>
+                <h2 class="fw-bold mb-1 text-primary">Student Progress Report</h2>
+                <p class="text-muted mb-0">English Class Management System</p>
+            </div>
+            <div class="text-end">
+                <p class="mb-0 fw-bold">Date: {% now "F j, Y" %}</p>
+                <p class="mb-0 text-muted">Student ID: {{ student.student_id }}</p>
+            </div>
+        </div>
+
+        <!-- Student Info -->
+        <div class="d-flex align-items-center mb-5">
+            {% if student.photo %}
+                <img src="{{ student.photo.url }}" alt="{{ student.name }}" class="rounded-circle me-4 border border-3 border-primary" style="width: 80px; height: 80px; object-fit: cover;">
+            {% else %}
+                <div class="bg-label-primary rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 80px; height: 80px;">
+                    <i class="bx bx-user fs-1"></i>
+                </div>
+            {% endif %}
+            <div>
+                <h3 class="fw-bold mb-1">{{ student.name }}</h3>
+                <p class="text-muted mb-0"><i class="bx bx-bookmark me-1"></i> {{ student.grade }} &nbsp; | &nbsp; <i class="bx bx-phone me-1"></i> Parent: {{ student.parent_phone }}</p>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="row mb-5">
+            <div class="col-6">
+                <div class="stat-card">
+                    <h5 class="text-muted mb-2">Overall Average</h5>
+                    <h2 class="mb-0 fw-bold {% if avg_score >= 80 %}text-success{% elif avg_score >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                        {{ avg_score }}%
+                    </h2>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="stat-card">
+                    <h5 class="text-muted mb-2">Attendance Rate</h5>
+                    <h2 class="mb-0 fw-bold {% if attendance_rate >= 90 %}text-success{% elif attendance_rate >= 75 %}text-warning{% else %}text-danger{% endif %}">
+                        {{ attendance_rate }}%
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Scores Table -->
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Recent Assessment Scores</h5>
+        <table class="table table-bordered mb-5">
+            <thead class="table-light">
+                <tr>
+                    <th>Class</th>
+                    <th>Assessment Type</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in recent_scores %}
+                <tr>
+                    <td>{{ score.course.class_name }}</td>
+                    <td>{{ score.score_type }}</td>
+                    <td class="fw-bold">{{ score.value }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-center text-muted">No recent scores recorded.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Missing Homework -->
+        <h5 class="fw-bold mb-3 border-bottom pb-2 text-danger">Action Required: Missing Homework</h5>
+        {% if missing_hw %}
+            <ul class="list-group mb-4">
+                {% for hw in missing_hw %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ hw.homework.title }}</strong> ({{ hw.homework.course.class_name }})
+                    </div>
+                    <span class="badge bg-label-danger rounded-pill">Due: {{ hw.homework.deadline|date:"M d, Y" }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        <p class="text-muted small">Please ensure the student completes the missing assignments above.</p>
+        {% else %}
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <i class="bx bx-check-circle me-2"></i> All homework assignments are up to date!
+            </div>
+        {% endif %}
+
+        <!-- Teacher Remarks -->
+        <div class="mt-5 border-top pt-4">
+            <h6 class="text-muted mb-4">Teacher's Signature: _______________________</h6>
+            <p class="small text-muted text-center mt-5 mb-0">Generated automatically by ECMS.</p>
+        </div>
+
+    </div>
+
+</body>
+</html>

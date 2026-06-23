@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Homework - ECMS{% endblock %}
+{% block header_title %}Homework Tracking{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Academics /</span> Homework</h4>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Submissions</h5>
+        <button class="btn btn-primary btn-sm"><i class="bx bx-plus"></i> Assign Homework</button>
+    </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Homework Title</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for sub in submissions %}
+                <tr>
+                    <td><strong>{{ sub.student.name }}</strong></td>
+                    <td>{{ sub.homework.course.class_name }}</td>
+                    <td>{{ sub.homework.title }}</td>
+                    <td>{{ sub.homework.deadline|date:"M d, Y" }}</td>
+                    <td>
+                        {% if sub.status == 'Submitted' %}
+                            <span class="badge bg-label-success"><i class="bx bx-check-circle me-1"></i> Submitted</span>
+                        {% elif sub.status == 'Not Submitted' %}
+                            <span class="badge bg-label-danger"><i class="bx bx-x-circle me-1"></i> Not Submitted</span>
+                        {% else %}
+                            <span class="badge bg-label-warning"><i class="bx bx-time-five me-1"></i> Late Submission</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit Status</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-muted">
+                        <i class="bx bx-task fs-1 d-block mb-3"></i>
+                        No homework submissions found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

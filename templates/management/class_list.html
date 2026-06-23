@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Classes - ECMS{% endblock %}
+{% block header_title %}Class Management{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Management /</span> Classes</h4>
+
+<div class="row mb-5">
+    {% for course in courses %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title text-primary">{{ course.class_name }}</h5>
+                <h6 class="card-subtitle text-muted mb-3"><i class="bx bx-group"></i> {{ course.student_count }} Students Enrolled</h6>
+                <p class="card-text">Manage students, track attendance, and assign homework for this class.</p>
+                
+                <div class="mt-4">
+                    <a href="{% url 'management:class_detail' course.id %}" class="btn btn-primary">View Details</a>
+                    <a href="javascript:void(0)" class="btn btn-outline-secondary ms-1"><i class="bx bx-edit-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="text-muted">
+            <i class="bx bx-book-bookmark fs-1 d-block mb-3"></i>
+            No classes found. Please create a class from the Django admin for now.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

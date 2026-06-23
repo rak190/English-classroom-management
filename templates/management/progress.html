@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Progress Tracking - ECMS{% endblock %}
+{% block header_title %}Progress Analytics{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'sneat/vendor/libs/apex-charts/apex-charts.css' %}" />
+{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Academics /</span> Progress Tracking</h4>
+
+<div class="row">
+    <!-- Overall Performance Chart -->
+    <div class="col-md-8 mb-4">
+        <div class="card h-100">
+            <div class="card-header border-bottom">
+                <h5 class="card-title mb-0">Class Performance Averages</h5>
+            </div>
+            <div class="card-body px-0 pb-0">
+                <div id="performanceChart" style="min-height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 bg-primary text-white text-center">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <i class="bx bx-trending-up bx-lg mb-3"></i>
+                <h4 class="text-white mb-2">Keep it up!</h4>
+                <p class="mb-0 text-white-50">Students are performing consistently well across all registered classes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'sneat/vendor/libs/apex-charts/apexcharts.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Get data from Django view context
+    const courseNames = [];
+    const courseAverages = [];
+    
+    {% for ca in course_averages %}
+        courseNames.push("{{ ca.course__class_name }}");
+        courseAverages.push({{ ca.average|default:0 }});
+    {% empty %}
+        courseNames.push("No Data");
+        courseAverages.push(0);
+    {% endfor %}
+
+    const options = {
+        series: [{
+            name: 'Average Score (%)',
+            data: courseAverages
+        }],
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar: { show: false },
+            fontFamily: 'Plus Jakarta Sans, sans-serif'
+        },
+        colors: ['#6366f1'],
+        plotOptions: {
+            bar: {
+                borderRadius: 10,
+                columnWidth: '40%',
+                dataLabels: { position: 'top' }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function (val) { return val.toFixed(1) + "%"; },
+            offsetY: -20,
+            style: { fontSize: '12px', colors: ["#304758"] }
+        },
+        xaxis: {
+            categories: courseNames,
+            position: 'bottom',
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            tooltip: { enabled: true }
+        },
+        yaxis: {
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            labels: { show: false }
+        }
+    };
+
+    const chart = new ApexCharts(document.querySelector("#performanceChart"), options);
+    chart.render();
+});
+</script>
+{% endblock %}

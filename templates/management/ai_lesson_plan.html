@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}AI Lesson Plan Generator - ECMS{% endblock %}
+{% block header_title %}Generative AI Lab{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light"><a href="{% url 'management:ai_dashboard' %}">Generative AI</a> /</span> Lesson Plan Generator
+</h4>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm" style="border-radius: 16px;">
+            <div class="card-header bg-label-success border-bottom pb-3" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                <h5 class="card-title mb-0 text-success d-flex align-items-center">
+                    <i class="bx bx-chalkboard bx-sm me-2"></i> Plan Parameters
+                </h5>
+            </div>
+            <div class="card-body pt-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Topic</label>
+                        <input type="text" class="form-control" name="topic" placeholder="e.g. Has to / Have to" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Student Level</label>
+                        <select class="form-select" name="level" required>
+                            <option value="A1 (Beginner)">A1 (Beginner)</option>
+                            <option value="A2 (Elementary)">A2 (Elementary)</option>
+                            <option value="B1 (Intermediate)">B1 (Intermediate)</option>
+                            <option value="B2 (Upper Intermediate)">B2 (Upper Intermediate)</option>
+                            <option value="C1 (Advanced)">C1 (Advanced)</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Class Duration (minutes)</label>
+                        <input type="number" class="form-control" name="duration" min="15" max="180" value="90" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 fw-bold">
+                        <i class="bx bx-magic-wand me-2"></i> Generate Lesson Plan
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm h-100" style="border-radius: 16px;">
+            <div class="card-header d-flex justify-content-between align-items-center border-bottom pb-3">
+                <h5 class="card-title mb-0 fw-bold">AI Output</h5>
+                {% if result_html %}
+                <button class="btn btn-sm btn-outline-secondary" onclick="window.print()">
+                    <i class="bx bx-printer me-1"></i> Print
+                </button>
+                {% endif %}
+            </div>
+            <div class="card-body pt-4" style="overflow-y: auto; max-height: 70vh;">
+                {% if result_html %}
+                    <div class="markdown-body">
+                        {{ result_html|safe }}
+                    </div>
+                {% else %}
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                        <i class="bx bx-bot bx-lg mb-3 opacity-50"></i>
+                        <p class="mb-0">Fill out the parameters and click Generate.</p>
+                        <p class="small opacity-50">Powered by Google Gemini 1.5</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+        color: var(--genz-text-main);
+        font-weight: 700;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .markdown-body p, .markdown-body li {
+        font-size: 1.05rem;
+        line-height: 1.6;
+    }
+    @media print {
+        .layout-menu, .layout-navbar, .col-md-4, .card-header { display: none !important; }
+        .col-md-8 { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; }
+        .card { border: none !important; box-shadow: none !important; }
+        .card-body { max-height: none !important; overflow: visible !important; }
+    }
+</style>
+{% endblock %}

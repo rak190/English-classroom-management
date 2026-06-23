@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}Class Schedule - ECMS{% endblock %}
+{% block header_title %}Weekly Timetable{% endblock %}
+
+{% block extra_css %}
+<style>
+    .schedule-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 15px;
+    }
+    .day-column {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .day-header {
+        text-align: center;
+        font-weight: 700;
+        padding: 10px;
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--genz-primary);
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+    .class-card {
+        padding: 15px;
+        background: white;
+        border-radius: 16px;
+        border-left: 4px solid var(--genz-primary);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        transition: transform 0.2s;
+    }
+    .class-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Academics /</span> Schedule</h4>
+
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+        <h5 class="mb-0">This Week's Timetable</h5>
+        <button class="btn btn-primary btn-sm"><i class="bx bx-plus me-1"></i> Add Schedule</button>
+    </div>
+    <div class="card-body pt-4">
+        <div class="schedule-grid">
+            <!-- Monday -->
+            <div class="day-column">
+                <div class="day-header">MON</div>
+                {% for s in schedule_by_day.MON %}
+                <div class="class-card">
+                    <h6 class="mb-1 text-primary">{{ s.course.class_name }}</h6>
+                    <small class="text-muted"><i class="bx bx-time-five"></i> {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}</small>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted small py-3">No Classes</div>
+                {% endfor %}
+            </div>
+
+            <!-- Tuesday -->
+            <div class="day-column">
+                <div class="day-header">TUE</div>
+                {% for s in schedule_by_day.TUE %}
+                <div class="class-card border-success">
+                    <h6 class="mb-1 text-success">{{ s.course.class_name }}</h6>
+                    <small class="text-muted"><i class="bx bx-time-five"></i> {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}</small>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted small py-3">No Classes</div>
+                {% endfor %}
+            </div>
+
+            <!-- Wednesday -->
+            <div class="day-column">
+                <div class="day-header">WED</div>
+                {% for s in schedule_by_day.WED %}
+                <div class="class-card border-warning">
+                    <h6 class="mb-1 text-warning">{{ s.course.class_name }}</h6>
+                    <small class="text-muted"><i class="bx bx-time-five"></i> {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}</small>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted small py-3">No Classes</div>
+                {% endfor %}
+            </div>
+
+            <!-- Thursday -->
+            <div class="day-column">
+                <div class="day-header">THU</div>
+                {% for s in schedule_by_day.THU %}
+                <div class="class-card border-info">
+                    <h6 class="mb-1 text-info">{{ s.course.class_name }}</h6>
+                    <small class="text-muted"><i class="bx bx-time-five"></i> {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}</small>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted small py-3">No Classes</div>
+                {% endfor %}
+            </div>
+
+            <!-- Friday -->
+            <div class="day-column">
+                <div class="day-header">FRI</div>
+                {% for s in schedule_by_day.FRI %}
+                <div class="class-card border-danger">
+                    <h6 class="mb-1 text-danger">{{ s.course.class_name }}</h6>
+                    <small class="text-muted"><i class="bx bx-time-five"></i> {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}</small>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted small py-3">No Classes</div>
+                {% endfor %}
+            </div>
+
+            <!-- Saturday -->
+            <div class="day-column">
+                <div class="day-header">SAT</div>
+                {% for s in schedule_by_day.SAT %}
+                <div class="class-card">
+                    <h6 class="mb-1 text-primary">{{ s.course.class_name }}</h6>
+                    <small class="text-muted"><i class="bx bx-time-five"></i> {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}</small>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted small py-3">No Classes</div>
+                {% endfor %}
+            </div>
+
+            <!-- Sunday -->
+            <div class="day-column">
+                <div class="day-header">SUN</div>
+                {% for s in schedule_by_day.SUN %}
+                <div class="class-card">
+                    <h6 class="mb-1 text-primary">{{ s.course.class_name }}</h6>
+                    <small class="text-muted"><i class="bx bx-time-five"></i> {{ s.start_time|time:"H:i" }} - {{ s.end_time|time:"H:i" }}</small>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted small py-3">No Classes</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

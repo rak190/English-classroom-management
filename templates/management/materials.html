@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Materials - ECMS{% endblock %}
+{% block header_title %}Teaching Materials{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Academics /</span> Materials</h4>
+
+<div class="row">
+    <!-- Upload Form -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <h5 class="card-header border-bottom mb-3"><i class="bx bx-cloud-upload text-primary me-2"></i> Upload Material</h5>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label" for="id_course">Class</label>
+                        {% render_field form.course class="form-select" id="id_course" %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="id_title">Title</label>
+                        {% render_field form.title class="form-control" placeholder="e.g. Unit 1 Worksheet" id="id_title" %}
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" for="id_file">File (PDF, PPT, Image)</label>
+                        {% render_field form.file class="form-control" id="id_file" %}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Upload File</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Materials Table -->
+    <div class="col-md-8 mb-4">
+        <div class="card h-100">
+            <h5 class="card-header">Uploaded Materials</h5>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Class</th>
+                            <th>Uploaded On</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for material in materials %}
+                        <tr>
+                            <td>
+                                <strong><i class="bx bx-file text-primary me-2"></i> {{ material.title }}</strong>
+                            </td>
+                            <td>{{ material.course.class_name }}</td>
+                            <td>{{ material.uploaded_at|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{{ material.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank" download>
+                                    <i class="bx bx-download me-1"></i> Download
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="bx bx-folder-open fs-1 d-block mb-3"></i>
+                                No teaching materials uploaded yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

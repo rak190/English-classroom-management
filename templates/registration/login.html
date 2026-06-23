@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>Login - ECMS</title>
+    
+    {% load static %}
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/fonts/boxicons.css' %}" />
+    
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static 'assets/vendor/css/theme-default.css' %}" class="template-customizer-theme-css" />
+    
+    <!-- Custom Genz CSS -->
+    <link rel="stylesheet" href="{% static 'css/genz.css' %}" />
+    
+    <style>
+        body {
+            background-color: var(--genz-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 24px;
+            background: white;
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.08);
+            padding: 40px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .login-logo i {
+            font-size: 32px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="login-header">
+        <div class="login-logo">
+            <i class='bx bxs-graduation'></i>
+        </div>
+        <h4 class="fw-bold mb-1" style="color: var(--genz-text-main);">Welcome Back</h4>
+        <p class="text-muted">Please sign in to access your classroom.</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert" style="border-radius: 12px; font-size: 0.9rem;">
+            Incorrect username or password. Please try again.
+        </div>
+        {% endif %}
+
+        <div class="mb-3">
+            <label for="username" class="form-label fw-bold">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" autofocus required>
+        </div>
+        
+        <div class="mb-4 form-password-toggle">
+            <div class="d-flex justify-content-between">
+                <label class="form-label fw-bold" for="password">Password</label>
+            </div>
+            <div class="input-group input-group-merge">
+                <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" required>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <button class="btn btn-primary d-grid w-100 fw-bold" type="submit" style="padding: 12px; border-radius: 12px;">
+                Sign in
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

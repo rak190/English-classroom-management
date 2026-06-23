@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Add Student - ECMS{% endblock %}
+{% block header_title %}Add New Student{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Management /</span> Add Student</h4>
+
+<div class="row">
+    <div class="col-xl-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Student Information</h5>
+                <small class="text-muted float-end">Enroll a new student</small>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="id_student_id">Student ID</label>
+                            {% render_field form.student_id class="form-control" placeholder="e.g. STU-001" id="id_student_id" %}
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="id_name">Full Name</label>
+                            {% render_field form.name class="form-control" placeholder="e.g. Sok Dara" id="id_name" %}
+                        </div>
+                        
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="id_gender">Gender</label>
+                            {% render_field form.gender class="form-select" id="id_gender" %}
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="id_grade">Grade Level</label>
+                            {% render_field form.grade class="form-control" placeholder="e.g. Grade 8" id="id_grade" %}
+                        </div>
+                        
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="id_phone">Student Phone (Optional)</label>
+                            {% render_field form.phone class="form-control" placeholder="Phone number" id="id_phone" %}
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="id_parent_phone">Parent Phone <span class="text-danger">*</span></label>
+                            {% render_field form.parent_phone class="form-control" placeholder="Parent's phone number" id="id_parent_phone" %}
+                        </div>
+                        
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="id_join_date">Join Date</label>
+                            {% render_field form.join_date class="form-control" id="id_join_date" %}
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="id_photo">Photo</label>
+                            {% render_field form.photo class="form-control" id="id_photo" %}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary me-2">Save Student</button>
+                        <a href="{% url 'management:student_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
