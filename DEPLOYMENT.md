@@ -1,6 +1,6 @@
 # ECMS Step-by-Step Deployment Guide
 
-This guide will walk you through exactly how to publish your English Class Management System to the internet using **Vercel** and **Supabase**. Vercel is an excellent serverless hosting provider, and Supabase provides a free, robust PostgreSQL database perfectly suited for Django.
+This guide will walk you through exactly how to publish your English Class Management System to the internet using **Vercel** and **Neon**. Vercel is an excellent serverless hosting provider, and Neon provides a free, incredibly easy-to-use PostgreSQL database perfectly suited for Django.
 
 ## Step 1: Prepare Your Code (GitHub)
 You need to put your code on GitHub so Vercel can read it.
@@ -14,31 +14,31 @@ You need to put your code on GitHub so Vercel can read it.
    git add .
    git commit -m "Initial commit - Ready for deployment to Vercel"
    git branch -M main
-   # IMPORTANT: Replace the URL below with the URL of your new GitHub repository
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+   # Your specific GitHub repository:
+   git remote add origin https://github.com/rak190/English-classroom-management
    git push -u origin main
    ```
 
-## Step 2: Create a PostgreSQL Database (Supabase)
-Vercel's environment requires a production database. We will use Supabase's free PostgreSQL service.
+## Step 2: Create a PostgreSQL Database (Neon)
+Vercel's environment requires a production database. We will use Neon's free serverless PostgreSQL service because it is incredibly simple and doesn't have the IPv4/IPv6 pooling issues.
 
-1. Create a free account at [Supabase.com](https://supabase.com/).
-2. Click **New Project** and select your organization.
+1. Create a free account at [Neon.tech](https://neon.tech/).
+2. Click **Create a project**.
 3. Fill out the form:
    - **Name**: `ecms-db`
-   - **Database Password**: Create a strong password (save it somewhere safe!)
+   - **Database Version**: 15 or 16
    - **Region**: Choose the one closest to you (e.g., Singapore).
-4. Click **Create new project**.
-5. Once it's created, go to **Project Settings** (the gear icon) -> **Database**.
-6. Scroll down to **Connection string** and select **URI**.
-7. Copy the link (it starts with `postgresql://`). **Replace `[YOUR-PASSWORD]` with the password you created in Step 3**. This is your `DATABASE_URL`.
+4. Click **Create project**.
+5. Once your project is created, you will see a **Connection Details** box right on the dashboard.
+6. Make sure the dropdown is set to **Postgres** (or Connection String) and click the "Copy" icon. 
+7. The link you copied will look something like this: `postgresql://neondb_owner:RandomPassword123@ep-cool-butterfly-a1bcdef.ap-southeast-1.aws.neon.tech/neondb?sslmode=require`. **This is your `DATABASE_URL`**.
 
 ## Step 3: Publish the Web App (Vercel)
 Now we host the actual Django code on Vercel.
 
 1. Create a free account at [Vercel.com](https://vercel.com/) and log in with your GitHub account.
 2. Click **Add New...** and select **Project**.
-3. Import your `ecms` repository from GitHub.
+3. Import your `English-classroom-management` repository from GitHub.
 4. In the **Configure Project** section, open **Build and Output Settings**.
    - Override the **Build Command** and type:
      ```bash
@@ -52,7 +52,7 @@ Before clicking Deploy, expand the **Environment Variables** section. You need t
 1. **Key**: `DEBUG`
    - **Value**: `False`
 2. **Key**: `DATABASE_URL`
-   - **Value**: *(Paste the Supabase URI string you copied in Step 2, ensuring you replaced the password)*
+   - **Value**: *(Paste the full Neon Connection String you copied in Step 2)*
 3. **Key**: `SECRET_KEY`
    - **Value**: *(Type a long random string of letters, numbers, and symbols)*
 4. **Key**: `GEMINI_API_KEY`
@@ -60,21 +60,21 @@ Before clicking Deploy, expand the **Environment Variables** section. You need t
 
 ## Step 5: Deploy!
 Click **Deploy**. 
-Vercel will now install your packages, collect static files, run the database migrations on Supabase, and deploy your serverless functions.
+Vercel will now install your packages, collect static files, run the database migrations on Neon, and deploy your serverless functions.
 
 Once it says "Congratulations!", click to go to your dashboard, and click your live domain (e.g., `ecms.vercel.app`). Your site is now on the internet!
 
 ---
 
 ### Important Note on Creating Your First Account
-Because you are using a brand new database on Supabase, there are no users yet! You won't be able to log in to the live site until you create a teacher account.
+Because you are using a brand new database on Neon, there are no users yet! You won't be able to log in to the live site until you create a teacher account.
 
 To do this locally connected to your live database:
 1. Open your local VS Code terminal.
-2. Run this command to connect your local Django to the Supabase database (replace the URL with your actual Supabase URL):
+2. Run this command to connect your local Django to the Neon database (replace the URL with your exact Neon URL):
    ```bash
    # On Windows PowerShell:
-   $env:DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-eu-central-1.pooler.supabase.com:6543/postgres"
+   $env:DATABASE_URL="postgresql://neondb_owner:YOUR_PASSWORD@ep-cool-butterfly-a1bcdef.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
    ```
 3. Then run:
    ```bash
