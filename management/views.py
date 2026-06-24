@@ -5,6 +5,8 @@ from django.core.management import call_command
 from django.contrib.auth.models import User
 from django.db.utils import OperationalError
 import traceback
+import csv
+from datetime import datetime
 from django.db.models import Count, Avg
 from .models import Student, Course, Enrollment, Attendance, Homework, HomeworkSubmission, Score, Material
 from .forms import StudentForm, CourseForm, AttendanceForm, MaterialForm
@@ -223,3 +225,133 @@ def test_generator_view(request):
         result_html = markdown.markdown(markdown_result)
         
     return render(request, 'management/ai_test.html', {'result_html': result_html})
+
+@login_required
+def student_bulk_import(request):
+    if request.method == 'POST':
+        if 'csv_file' not in request.FILES:
+            return render(request, 'management/student_bulk_import.html', {'error': 'No file uploaded.'})
+        
+        csv_file = request.FILES['csv_file']
+        if not csv_file.name.endswith('.csv'):
+            return render(request, 'management/student_bulk_import.html', {'error': 'Please upload a valid CSV file.'})
+            
+        try:
+            file_data = csv_file.read().decode('utf-8-sig').splitlines()
+            reader = csv.DictReader(file_data)
+            
+            students_to_create = []
+            for row in reader:
+                if not row.get('student_id') or not row.get('name') or not row.get('parent_phone'):
+                    continue
+                
+                if Student.objects.filter(student_id=row['student_id']).exists():
+                    continue
+                    
+                join_date_str = row.get('join_date', '')
+                try:
+                    join_date = datetime.strptime(join_date_str, '%Y-%m-%d').date()
+                except ValueError:
+                    join_date = datetime.now().date()
+                    
+                students_to_create.append(Student(
+                    student_id=row['student_id'],
+                    name=row['name'],
+                    gender=row.get('gender', 'O')[:1].upper(),
+                    grade=row.get('grade', 'Unassigned'),
+                    phone=row.get('phone', ''),
+                    parent_phone=row['parent_phone'],
+                    join_date=join_date
+                ))
+            
+            if students_to_create:
+                Student.objects.bulk_create(students_to_create)
+                return render(request, 'management/student_bulk_import.html', {'success': f'Successfully imported {len(students_to_create)} students!'})
+            else:
+                return render(request, 'management/student_bulk_import.html', {'error': 'No new students imported. Make sure student_ids are unique and required columns are present.'})
+                
+        except Exception as e:
+            return render(request, 'management/student_bulk_import.html', {'error': f'Error processing file: {str(e)}'})
+            
+    if 'download_template' in request.GET:
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="student_import_template.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['student_id', 'name', 'gender', 'grade', 'parent_phone', 'phone', 'join_date'])
+        writer.writerow(['STU-1001', 'Sok Dara', 'M', 'Grade 8', '012345678', '098765432', '2025-09-01'])
+        writer.writerow(['STU-1002', 'Meas Bopha', 'F', 'Grade 8', '012345679', '', '2025-09-01'])
+        return response
+        
+    return render(request, 'management/student_bulk_import.html')
+
+@login_required
+def class_bulk_enroll(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    enrolled_student_ids = course.enrollments.values_list('student_id', flat=True)
+    available_students = Student.objects.exclude(id__in=enrolled_student_ids).order_by('name')
+    
+    if request.method == 'POST':
+        selected_student_ids = request.POST.getlist('students')
+        enrollments_to_create = []
+        for s_id in selected_student_ids:
+            enrollments_to_create.append(Enrollment(student_id=s_id, course=course))
+            
+        if enrollments_to_create:
+            Enrollment.objects.bulk_create(enrollments_to_create)
+            return redirect('management:class_detail', course_id=course.id)
+            
+    return render(request, 'management/class_bulk_enroll.html', {
+        'course': course,
+        'available_students': available_students
+    })
+
+@login_required
+def bulk_attendance_view(request):
+    courses = Course.objects.all()
+    selected_course = None
+    students = []
+    selected_date = datetime.now().strftime('%Y-%m-%d')
+    
+    if request.method == 'POST':
+        course_id = request.POST.get('course')
+        selected_date = request.POST.get('date')
+        
+        if course_id:
+            selected_course = get_object_or_404(Course, pk=course_id)
+            
+            if 'save_attendance' in request.POST:
+                student_ids = request.POST.getlist('student_ids')
+                
+                for s_id in student_ids:
+                    status = request.POST.get(f'status_{s_id}', 'Present')
+                    Attendance.objects.update_or_create(
+                        student_id=s_id,
+                        course=selected_course,
+                        date=selected_date,
+                        defaults={'status': status}
+                    )
+                return render(request, 'management/attendance_bulk.html', {
+                    'courses': courses,
+                    'success': f'Attendance for {selected_course.class_name} saved successfully!',
+                    'selected_date': selected_date
+                })
+            else:
+                enrollments = selected_course.enrollments.select_related('student').all()
+                existing_records = Attendance.objects.filter(
+                    course=selected_course, 
+                    date=selected_date
+                ).values_list('student_id', 'status')
+                status_map = {s_id: status for s_id, status in existing_records}
+                
+                for e in enrollments:
+                    students.append({
+                        'student': e.student,
+                        'status': status_map.get(e.student.id, 'Present')
+                    })
+                    
+    return render(request, 'management/attendance_bulk.html', {
+        'courses': courses,
+        'selected_course': selected_course,
+        'students': students,
+        'selected_date': selected_date
+    })

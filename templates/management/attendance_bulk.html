@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Bulk Attendance - ECMS{% endblock %}
+{% block header_title %}Take Attendance{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Academics /</span> Bulk Attendance</h4>
+
+<div class="row">
+    <!-- Selection Panel -->
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" class="row gx-3 gy-2 align-items-center">
+                    {% csrf_token %}
+                    <div class="col-sm-4">
+                        <label class="form-label" for="courseSelect">Select Class</label>
+                        <select class="form-select" id="courseSelect" name="course" required>
+                            <option value="">Choose...</option>
+                            {% for c in courses %}
+                            <option value="{{ c.id }}" {% if selected_course and selected_course.id == c.id %}selected{% endif %}>{{ c.class_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" for="dateSelect">Date</label>
+                        <input type="date" class="form-control" id="dateSelect" name="date" value="{{ selected_date }}" required>
+                    </div>
+                    <div class="col-auto mt-4">
+                        <button type="submit" class="btn btn-primary">Load Students</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Grid -->
+    {% if selected_course %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Attendance for {{ selected_course.class_name }}</h5>
+                <span class="badge bg-label-primary">{{ selected_date }}</span>
+            </div>
+            
+            {% if success %}
+            <div class="card-body pb-0">
+                <div class="alert alert-success border-0 bg-success text-white shadow-sm rounded-3" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class='bx bx-check-circle fs-3 me-3'></i>
+                        <span>{{ success }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="course" value="{{ selected_course.id }}">
+                <input type="hidden" name="date" value="{{ selected_date }}">
+                <input type="hidden" name="save_attendance" value="1">
+                
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th class="text-center text-success">Present</th>
+                                <th class="text-center text-danger">Absent</th>
+                                <th class="text-center text-warning">Late</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            {% for item in students %}
+                            <tr>
+                                <td><strong>{{ item.student.student_id }}</strong></td>
+                                <td>{{ item.student.name }}</td>
+                                <input type="hidden" name="student_ids" value="{{ item.student.id }}">
+                                <td class="text-center">
+                                    <input class="form-check-input" type="radio" name="status_{{ item.student.id }}" value="Present" {% if item.status == 'Present' %}checked{% endif %}>
+                                </td>
+                                <td class="text-center">
+                                    <input class="form-check-input" type="radio" name="status_{{ item.student.id }}" value="Absent" {% if item.status == 'Absent' %}checked{% endif %}>
+                                </td>
+                                <td class="text-center">
+                                    <input class="form-check-input" type="radio" name="status_{{ item.student.id }}" value="Late" {% if item.status == 'Late' %}checked{% endif %}>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">No students are currently enrolled in this class.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if students %}
+                <div class="card-footer border-top p-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bx bx-save me-1"></i> Save Attendance
+                    </button>
+                    <span class="text-muted ms-3">Hint: All unmarked students default to "Present".</span>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

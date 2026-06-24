@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Import Students - ECMS{% endblock %}
+{% block header_title %}Import Students (CSV){% endblock %}
+
+{% block content %}
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Management /</span> Import Students</h4>
+
+<div class="row">
+    <div class="col-xl-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Bulk Import via CSV</h5>
+            </div>
+            <div class="card-body">
+                {% if success %}
+                <div class="alert alert-success border-0 bg-success text-white shadow-sm rounded-3 mb-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class='bx bx-check-circle fs-3 me-3'></i>
+                        <span>{{ success }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if error %}
+                <div class="alert alert-danger border-0 bg-danger text-white shadow-sm rounded-3 mb-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class='bx bx-error-circle fs-3 me-3'></i>
+                        <span>{{ error }}</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                <p>Upload a CSV file to add multiple students at once. Please ensure your file matches the required format.</p>
+                
+                <div class="mb-4">
+                    <a href="?download_template=1" class="btn btn-outline-primary">
+                        <i class="bx bx-download me-1"></i> Download CSV Template
+                    </a>
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="csvFile" class="form-label">Upload CSV File <span class="text-danger">*</span></label>
+                        <input class="form-control" type="file" id="csvFile" name="csv_file" accept=".csv" required>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary me-2">Import Students</button>
+                        <a href="{% url 'management:student_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">CSV Format Instructions</h6>
+            </div>
+            <div class="card-body">
+                <p>Your CSV file must include the following columns exactly as named (case-sensitive):</p>
+                <ul>
+                    <li><code>student_id</code> (Required)</li>
+                    <li><code>name</code> (Required)</li>
+                    <li><code>parent_phone</code> (Required)</li>
+                    <li><code>gender</code> (M, F, or O)</li>
+                    <li><code>grade</code> (e.g. Grade 8)</li>
+                    <li><code>phone</code></li>
+                    <li><code>join_date</code> (YYYY-MM-DD)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
