@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ECMS</title>
+    <title>Register Teacher - ECMS</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
@@ -18,13 +18,13 @@
             height: 100vh;
             margin: 0;
         }
-        .login-card {
+        .register-card {
             background: white;
             border-radius: 24px;
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
             padding: 40px;
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
         }
         .form-control {
             border-radius: 12px;
@@ -43,49 +43,44 @@
 </head>
 <body>
 
-<div class="login-card">
+<div class="register-card">
     <div class="text-center mb-4">
-        <h3 class="fw-bold text-dark">Welcome Back</h3>
-        <p class="text-muted">Log in to manage your English classroom.</p>
+        <h3 class="fw-bold text-dark">Join ECMS</h3>
+        <p class="text-muted">Create a teacher account to manage your students.</p>
     </div>
 
     <form method="post">
         {% csrf_token %}
         
-        {% if form.errors %}
+        {% if form.non_field_errors %}
         <div class="alert alert-danger">
-            Your username and password didn't match. Please try again.
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
         </div>
         {% endif %}
 
-        {% if next %}
-            {% if user.is_authenticated %}
-            <div class="alert alert-info">
-                Your account doesn't have access to this page. To proceed,
-                please login with an account that has access.
-            </div>
-            {% else %}
-            <div class="alert alert-info">
-                Please login to see this page.
+        {% for field in form %}
+        <div class="mb-3">
+            <label class="form-label text-dark fw-medium" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="form-text text-muted small">{{ field.help_text }}</div>
+            {% endif %}
+            {% if field.errors %}
+            <div class="text-danger small mt-1">
+                {% for error in field.errors %}
+                    {{ error }}
+                {% endfor %}
             </div>
             {% endif %}
-        {% endif %}
-
-        <div class="mb-3">
-            <label class="form-label text-dark fw-medium" for="id_username">Username</label>
-            {{ form.username }}
         </div>
-        
-        <div class="mb-4">
-            <label class="form-label text-dark fw-medium" for="id_password">Password</label>
-            {{ form.password }}
-        </div>
+        {% endfor %}
 
-        <button type="submit" class="btn btn-primary w-100">Log In</button>
-        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit" class="btn btn-primary w-100 mt-3">Create Account</button>
         
         <div class="text-center mt-4">
-            <p class="text-muted small">Are you a new teacher? <a href="{% url 'management:register_teacher' %}" style="color: #1E65FF; text-decoration: none; font-weight: 600;">Create an account</a></p>
+            <p class="text-muted small">Already have an account? <a href="{% url 'login' %}" style="color: #1E65FF; text-decoration: none; font-weight: 600;">Log in</a></p>
         </div>
     </form>
 </div>

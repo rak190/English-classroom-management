@@ -1,6 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Student(models.Model):
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='students')
     GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),
@@ -19,6 +21,7 @@ class Student(models.Model):
         return f"{self.student_id} - {self.name}"
 
 class Course(models.Model):
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='courses')
     class_name = models.CharField(max_length=200)
 
     def __str__(self):
@@ -87,6 +90,7 @@ class Score(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     score_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     value = models.FloatField()
+    date = models.DateField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.student.name} - {self.score_type}: {self.value}"
@@ -120,3 +124,39 @@ class Schedule(models.Model):
 
     def __str__(self):
         return f"{self.course.class_name} - {self.get_day_display()} ({self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')})"
+
+class Notice(models.Model):
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='notices')
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    author_name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    icon = models.CharField(max_length=50, default='bx-book-open', help_text="Boxicons class, e.g. bx-calendar-event")
+    
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+class Event(models.Model):
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='events')
+    title = models.CharField(max_length=200)
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField(null=True, blank=True)
+    audience = models.CharField(max_length=100, help_text="e.g. Grade 7, All Staff")
+    
+    class Meta:
+        ordering = ['date', 'start_time']
+
+    def __str__(self):
+        return self.title
+
+class InviteCode(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.code

@@ -3,7 +3,12 @@
 {% block header_title %}Class Management{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Management /</span> Classes</h4>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold py-3 mb-0"><span class="text-muted fw-light">Management /</span> Classes</h4>
+    <a href="{% url 'management:class_create' %}" class="btn btn-primary">
+        <i class="bx bx-plus me-1"></i> Add Class
+    </a>
+</div>
 
 <div class="row mb-5">
     {% for course in courses %}
@@ -14,10 +19,11 @@
                 <h6 class="card-subtitle text-muted mb-3"><i class="bx bx-group"></i> {{ course.student_count }} Students Enrolled</h6>
                 <p class="card-text">Manage students, track attendance, and assign homework for this class.</p>
                 
-                <div class="mt-4">
-                    <a href="{% url 'management:class_detail' course.id %}" class="btn btn-primary">View Details</a>
-                    <a href="javascript:void(0)" class="btn btn-outline-secondary ms-1"><i class="bx bx-edit-alt"></i></a>
-                </div>
+                    <div class="mt-4">
+                        <a href="{% url 'management:class_detail' course.id %}" class="btn btn-primary">View Details</a>
+                        <a href="{% url 'management:class_edit' course.id %}" class="btn btn-outline-secondary ms-1"><i class="bx bx-edit-alt"></i></a>
+                        <a href="{% url 'management:class_delete' course.id %}" class="btn btn-outline-danger ms-1"><i class="bx bx-trash"></i></a>
+                    </div>
             </div>
         </div>
     </div>
@@ -25,7 +31,7 @@
     <div class="col-12 text-center py-5">
         <div class="text-muted">
             <i class="bx bx-book-bookmark fs-1 d-block mb-3"></i>
-            No classes found. Please create a class from the Django admin for now.
+            No classes found. Click "Add Class" to create one!
         </div>
     </div>
     {% endfor %}

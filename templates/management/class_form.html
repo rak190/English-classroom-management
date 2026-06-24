@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}{% if is_edit %}Edit Class{% else %}Add Class{% endif %} - ECMS{% endblock %}
+{% block header_title %}{% if is_edit %}Edit Class{% else %}Add Class{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Class Details</h5>
+                <small class="text-muted float-end">Fill in all fields</small>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label" for="id_class_name">Class Name <span class="text-danger">*</span></label>
+                        {% render_field form.class_name class="form-control" placeholder="e.g. English Grade 7A" %}
+                        {% if form.class_name.errors %}
+                        <div class="text-danger small mt-1">
+                            {% for error in form.class_name.errors %}{{ error }}{% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary me-2">Save Class</button>
+                        <a href="{% url 'management:class_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

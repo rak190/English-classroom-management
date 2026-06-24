@@ -2,27 +2,70 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core.management import call_command
+from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.db.utils import OperationalError
 import traceback
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db.models import Count, Avg
-from .models import Student, Course, Enrollment, Attendance, Homework, HomeworkSubmission, Score, Material
-from .forms import StudentForm, CourseForm, AttendanceForm, MaterialForm
+from django.utils import timezone
+from .models import Student, Course, Enrollment, Attendance, Homework, HomeworkSubmission, Score, Material, Notice, Event, InviteCode
+from .forms import StudentForm, CourseForm, AttendanceForm, MaterialForm, TeacherRegistrationForm
+
+def register_teacher(request):
+    if request.method == 'POST':
+        form = TeacherRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('management:dashboard')
+    else:
+        form = TeacherRegistrationForm()
+    return render(request, 'management/register.html', {'form': form})
 
 @login_required
 def dashboard(request):
-    total_students = Student.objects.count()
-    active_classes = Course.objects.count()
+    import json
+    today = timezone.now().date()
     
-    # Simple placeholder logic for dashboard stats for Phase 1
-    # In a real app, this would filter by today's date
-    today_attendance_present = Attendance.objects.filter(status='Present').count()
-    today_attendance_total = Attendance.objects.count()
+    total_students = Student.objects.filter(teacher=request.user).count()
+    active_classes = Course.objects.filter(teacher=request.user).count()
     
-    hw_submitted = HomeworkSubmission.objects.filter(status='Submitted').count()
-    hw_total = HomeworkSubmission.objects.count()
+    today_attendance_present = Attendance.objects.filter(course__teacher=request.user, date=today, status='Present').count()
+    today_attendance_total = Attendance.objects.filter(course__teacher=request.user, date=today).count()
+    
+    hw_submitted = HomeworkSubmission.objects.filter(student__teacher=request.user, status='Submitted').count()
+    hw_total = HomeworkSubmission.objects.filter(student__teacher=request.user).count()
+
+    # Chart 1: Gender distribution
+    male_count = Student.objects.filter(teacher=request.user, gender='M').count()
+    female_count = Student.objects.filter(teacher=request.user, gender='F').count()
+    gender_data = [male_count, female_count]
+
+    # Chart 2: Attendance over last 5 days
+    attendance_labels = []
+    attendance_data = []
+    for i in range(4, -1, -1):
+        d = today - timedelta(days=i)
+        attendance_labels.append(d.strftime('%a'))
+        present = Attendance.objects.filter(course__teacher=request.user, date=d, status='Present').count()
+        total = Attendance.objects.filter(course__teacher=request.user, date=d).count()
+        pct = (present / total * 100) if total > 0 else 0
+        attendance_data.append(round(pct))
+
+    # Chart 3: Progress tracking (Scores per course)
+    course_averages = Score.objects.filter(student__teacher=request.user).values('course__class_name').annotate(average=Avg('value'))[:8]
+    if course_averages:
+        progress_labels = [c['course__class_name'] for c in course_averages]
+        progress_data = [round(c['average'], 1) for c in course_averages]
+    else:
+        progress_labels = ["No Data"]
+        progress_data = [0]
+
+    # Notices & Events
+    recent_notices = Notice.objects.filter(teacher=request.user).order_by('-created_at')[:3]
+    upcoming_events = Event.objects.filter(teacher=request.user, date__gte=today).order_by('date', 'start_time')[:3]
 
     context = {
         'total_students': total_students,
@@ -31,12 +74,19 @@ def dashboard(request):
         'today_attendance_total': today_attendance_total,
         'hw_submitted': hw_submitted,
         'hw_total': hw_total,
+        'gender_data': json.dumps(gender_data),
+        'attendance_labels': json.dumps(attendance_labels),
+        'attendance_data': json.dumps(attendance_data),
+        'progress_labels': json.dumps(progress_labels),
+        'progress_data': json.dumps(progress_data),
+        'recent_notices': recent_notices,
+        'upcoming_events': upcoming_events,
     }
     return render(request, 'management/dashboard.html', context)
 
 @login_required
 def student_list(request):
-    students = Student.objects.all().order_by('-join_date')
+    students = Student.objects.filter(teacher=request.user).order_by('-join_date')
     return render(request, 'management/student_list.html', {'students': students})
 
 @login_required
@@ -44,47 +94,124 @@ def student_create(request):
     if request.method == 'POST':
         form = StudentForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            student = form.save(commit=False)
+            student.teacher = request.user
+            student.save()
             return redirect('management:student_list')
     else:
         form = StudentForm()
-    return render(request, 'management/student_form.html', {'form': form})
+    return render(request, 'management/student_form.html', {'form': form, 'is_edit': False})
+
+@login_required
+def student_edit(request, student_id):
+    student = get_object_or_404(Student, pk=student_id, teacher=request.user)
+    if request.method == 'POST':
+        form = StudentForm(request.POST, request.FILES, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('management:student_list')
+    else:
+        form = StudentForm(instance=student)
+    return render(request, 'management/student_form.html', {'form': form, 'is_edit': True})
+
+@login_required
+def student_delete(request, student_id):
+    student = get_object_or_404(Student, pk=student_id, teacher=request.user)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('management:student_list')
+    return render(request, 'management/confirm_delete.html', {'object': student, 'title': 'Delete Student'})
 
 @login_required
 def class_list(request):
-    courses = Course.objects.annotate(student_count=Count('enrollments')).all()
+    courses = Course.objects.filter(teacher=request.user).annotate(student_count=Count('enrollments')).all()
     return render(request, 'management/class_list.html', {'courses': courses})
 
 @login_required
+def class_create(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.teacher = request.user
+            course.save()
+            return redirect('management:class_list')
+    else:
+        form = CourseForm()
+    return render(request, 'management/class_form.html', {'form': form, 'is_edit': False})
+
+@login_required
+def class_edit(request, course_id):
+    course = get_object_or_404(Course, pk=course_id, teacher=request.user)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('management:class_list')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'management/class_form.html', {'form': form, 'is_edit': True})
+
+@login_required
+def class_delete(request, course_id):
+    course = get_object_or_404(Course, pk=course_id, teacher=request.user)
+    if request.method == 'POST':
+        course.delete()
+        return redirect('management:class_list')
+    return render(request, 'management/confirm_delete.html', {'object': course, 'title': 'Delete Class'})
+
+@login_required
 def class_detail(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)
-    enrollments = course.enrollments.all()
+    course = get_object_or_404(Course, pk=course_id, teacher=request.user)
+    enrollments = course.enrollments.select_related('student').all()
     return render(request, 'management/class_detail.html', {'course': course, 'enrollments': enrollments})
+
+@login_required
+def remove_student_from_class(request, course_id, student_id):
+    course = get_object_or_404(Course, pk=course_id, teacher=request.user)
+    if request.method == 'POST':
+        enrollment = get_object_or_404(Enrollment, course=course, student_id=student_id)
+        enrollment.delete()
+    return redirect('management:class_detail', course_id=course.id)
 
 @login_required
 def attendance_view(request):
     if request.method == 'POST':
         form = AttendanceForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Validate course belongs to teacher
+            if form.cleaned_data['course'].teacher == request.user:
+                form.save()
             return redirect('management:attendance_view')
     else:
         form = AttendanceForm()
+        form.fields['course'].queryset = Course.objects.filter(teacher=request.user)
+        form.fields['student'].queryset = Student.objects.filter(teacher=request.user)
         
-    attendances = Attendance.objects.all().order_by('-date')
+    attendances = Attendance.objects.filter(course__teacher=request.user).order_by('-date')
     return render(request, 'management/attendance.html', {'form': form, 'attendances': attendances})
 
 @login_required
 def homework_view(request):
-    submissions = HomeworkSubmission.objects.all().select_related('student', 'homework')
+    submissions = HomeworkSubmission.objects.filter(student__teacher=request.user).select_related('student', 'homework')
     return render(request, 'management/homework.html', {'submissions': submissions})
 
 @login_required
+def homework_status_edit(request, submission_id):
+    submission = get_object_or_404(HomeworkSubmission, pk=submission_id, student__teacher=request.user)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(HomeworkSubmission.STATUS_CHOICES):
+            submission.status = new_status
+            submission.save()
+    return redirect('management:homework_view')
+
+@login_required
 def score_view(request):
-    scores = Score.objects.all().select_related('student', 'course')
+    scores = Score.objects.filter(student__teacher=request.user).select_related('student', 'course')
     
     # Calculate average scores
-    student_averages = Score.objects.values('student__name').annotate(average=Avg('value'))
+    student_averages = Score.objects.filter(student__teacher=request.user).values('student__name').annotate(average=Avg('value'))
     
     return render(request, 'management/scores.html', {
         'scores': scores,
@@ -96,18 +223,20 @@ def material_view(request):
     if request.method == 'POST':
         form = MaterialForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            if form.cleaned_data['course'].teacher == request.user:
+                form.save()
             return redirect('management:material_view')
     else:
         form = MaterialForm()
+        form.fields['course'].queryset = Course.objects.filter(teacher=request.user)
         
-    materials = Material.objects.all().order_by('-uploaded_at')
+    materials = Material.objects.filter(course__teacher=request.user).order_by('-uploaded_at')
     return render(request, 'management/materials.html', {'form': form, 'materials': materials})
 
 @login_required
 def schedule_view(request):
     from .models import Schedule
-    schedules = Schedule.objects.all().select_related('course').order_by('day', 'start_time')
+    schedules = Schedule.objects.filter(course__teacher=request.user).select_related('course').order_by('day', 'start_time')
     
     # Group schedules by day for easier rendering in template
     days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
@@ -120,9 +249,9 @@ def schedule_view(request):
 @login_required
 def progress_tracking_view(request):
     # This view will gather overall data for charts
-    courses = Course.objects.all()
+    courses = Course.objects.filter(teacher=request.user)
     # Simple aggregation: Average score per course
-    course_averages = Score.objects.values('course__class_name').annotate(average=Avg('value'))
+    course_averages = Score.objects.filter(course__teacher=request.user).values('course__class_name').annotate(average=Avg('value'))
     
     return render(request, 'management/progress.html', {
         'courses': courses,
@@ -131,7 +260,7 @@ def progress_tracking_view(request):
 
 @login_required
 def parent_report_view(request, student_id):
-    student = get_object_or_404(Student, pk=student_id)
+    student = get_object_or_404(Student, pk=student_id, teacher=request.user)
     
     # Calculate attendance rate
     total_attendance = Attendance.objects.filter(student=student).count()
@@ -261,7 +390,8 @@ def student_bulk_import(request):
                     grade=row.get('grade', 'Unassigned'),
                     phone=row.get('phone', ''),
                     parent_phone=row['parent_phone'],
-                    join_date=join_date
+                    join_date=join_date,
+                    teacher=request.user
                 ))
             
             if students_to_create:
@@ -286,9 +416,9 @@ def student_bulk_import(request):
 
 @login_required
 def class_bulk_enroll(request, course_id):
-    course = get_object_or_404(Course, pk=course_id)
+    course = get_object_or_404(Course, pk=course_id, teacher=request.user)
     enrolled_student_ids = course.enrollments.values_list('student_id', flat=True)
-    available_students = Student.objects.exclude(id__in=enrolled_student_ids).order_by('name')
+    available_students = Student.objects.filter(teacher=request.user).exclude(id__in=enrolled_student_ids).order_by('name')
     
     if request.method == 'POST':
         selected_student_ids = request.POST.getlist('students')
@@ -307,7 +437,7 @@ def class_bulk_enroll(request, course_id):
 
 @login_required
 def bulk_attendance_view(request):
-    courses = Course.objects.all()
+    courses = Course.objects.filter(teacher=request.user)
     selected_course = None
     students = []
     selected_date = datetime.now().strftime('%Y-%m-%d')
@@ -317,7 +447,7 @@ def bulk_attendance_view(request):
         selected_date = request.POST.get('date')
         
         if course_id:
-            selected_course = get_object_or_404(Course, pk=course_id)
+            selected_course = get_object_or_404(Course, pk=course_id, teacher=request.user)
             
             if 'save_attendance' in request.POST:
                 student_ids = request.POST.getlist('student_ids')

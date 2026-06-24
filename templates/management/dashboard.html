@@ -190,11 +190,11 @@
                         <div class="d-flex justify-content-center mt-3 gap-4">
                             <div class="text-center">
                                 <span class="d-block text-muted" style="font-size: 12px;"><i class='bx bxs-circle text-warning me-1'></i>ស្រី (Girls)</span>
-                                <strong class="fs-5">234</strong>
+                                <strong class="fs-5" id="female-count-label"></strong>
                             </div>
                             <div class="text-center">
                                 <span class="d-block text-muted" style="font-size: 12px;"><i class='bx bxs-circle text-primary me-1'></i>ប្រុស (Boys)</span>
-                                <strong class="fs-5">193</strong>
+                                <strong class="fs-5" id="male-count-label"></strong>
                             </div>
                         </div>
                     </div>
@@ -252,45 +252,26 @@
                         </div>
                         
                         <div class="notice-list">
+                            {% for notice in recent_notices %}
                             <div class="notice-item">
                                 <div class="notice-icon">
-                                    <i class='bx bx-calendar-event'></i>
+                                    <i class='bx {{ notice.icon }}'></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h6 class="mb-1" style="font-size: 14px; font-weight: 600;">School Event Reminder</h6>
-                                    <p class="mb-0 text-muted" style="font-size: 12px;">by Ms. Harper, Event Coordinator</p>
+                                    <h6 class="mb-1" style="font-size: 14px; font-weight: 600;">{{ notice.title }}</h6>
+                                    <p class="mb-0 text-muted" style="font-size: 12px;">by {{ notice.author_name }}</p>
+                                    <p class="mt-2 text-muted" style="font-size: 11px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ notice.content }}</p>
                                 </div>
                                 <div class="text-end">
-                                    <small class="d-block text-muted" style="font-size: 11px;">May 29, 2025</small>
+                                    <small class="d-block text-muted" style="font-size: 11px;">{{ notice.created_at|date:"M d, Y" }}</small>
                                 </div>
                             </div>
-                            
-                            <div class="notice-item">
-                                <div class="notice-icon">
-                                    <i class='bx bx-book-open'></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1" style="font-size: 14px; font-weight: 600;">Important Exam Update</h6>
-                                    <p class="mb-0 text-muted" style="font-size: 12px;">by Principal Anderson</p>
-                                    <p class="mt-2 text-muted" style="font-size: 11px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Dear Students and Staff, due to unforeseen circumstances, the mathematics examination scheduled for June 3rd will now take place on June 5th...</p>
-                                </div>
-                                <div class="text-end">
-                                    <small class="d-block text-muted" style="font-size: 11px;">May 27, 2025</small>
-                                </div>
+                            {% empty %}
+                            <div class="text-center py-4 text-muted">
+                                <i class="bx bx-news fs-2 mb-2 d-block"></i>
+                                No recent notices.
                             </div>
-                            
-                            <div class="notice-item">
-                                <div class="notice-icon">
-                                    <i class='bx bx-first-aid'></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1" style="font-size: 14px; font-weight: 600;">Health and Safety Update</h6>
-                                    <p class="mb-0 text-muted" style="font-size: 12px;">by Nurse Julia</p>
-                                </div>
-                                <div class="text-end">
-                                    <small class="d-block text-muted" style="font-size: 11px;">May 26, 2025</small>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -368,32 +349,20 @@
                     <i class='bx bx-dots-horizontal-rounded text-muted'></i>
                 </div>
                 
-                <div class="event-item mb-3 p-3" style="background-color: #F8FAFC; border-radius: 12px; border-left: 4px solid var(--genz-accent);">
+                {% for event in upcoming_events %}
+                <div class="event-item mb-3 p-3" style="background-color: #F8FAFC; border-radius: 12px; border-left: 4px solid var(--genz-{% cycle 'accent' 'primary' 'accent' %});">
                     <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-warning text-dark me-2">15 July</span>
-                        <small class="text-muted" style="font-size: 11px;">7:00 AM - 8:00 AM</small>
+                        <span class="badge bg-{% cycle 'warning' 'primary' 'warning' %} text-{% cycle 'dark' 'white' 'dark' %} me-2">{{ event.date|date:"j M" }}</span>
+                        <small class="text-muted" style="font-size: 11px;">{{ event.start_time|time:"g:i A" }} {% if event.end_time %}- {{ event.end_time|time:"g:i A" }}{% endif %}</small>
                     </div>
-                    <h6 class="mb-1" style="font-size: 13px; font-weight: 600;">New Student Inauguration Ceremony</h6>
-                    <small class="text-primary fw-medium" style="font-size: 11px;">Grade 7</small>
+                    <h6 class="mb-1" style="font-size: 13px; font-weight: 600;">{{ event.title }}</h6>
+                    <small class="text-primary fw-medium" style="font-size: 11px;">{{ event.audience }}</small>
                 </div>
-                
-                <div class="event-item mb-3 p-3" style="background-color: #F8FAFC; border-radius: 12px; border-left: 4px solid var(--genz-primary);">
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-primary text-white me-2">18 July</span>
-                        <small class="text-muted" style="font-size: 11px;">10:00 AM - 11:00 AM</small>
-                    </div>
-                    <h6 class="mb-1" style="font-size: 13px; font-weight: 600;">Chairman of Student Body Handover</h6>
-                    <small class="text-primary fw-medium" style="font-size: 11px;">Grade 8</small>
+                {% empty %}
+                <div class="text-center py-4 text-muted">
+                    No upcoming events.
                 </div>
-                
-                <div class="event-item p-3" style="background-color: #F8FAFC; border-radius: 12px; border-left: 4px solid var(--genz-accent);">
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-warning text-dark me-2">27 July</span>
-                        <small class="text-muted" style="font-size: 11px;">3:00 PM</small>
-                    </div>
-                    <h6 class="mb-1" style="font-size: 13px; font-weight: 600;">Closing of School Clubs Acceptance</h6>
-                    <small class="text-primary fw-medium" style="font-size: 11px;">Grade 7</small>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -403,6 +372,16 @@
 {% block extra_js %}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // Inject JSON variables
+        const genderData = JSON.parse('{{ gender_data|escapejs }}');
+        const attendanceLabels = JSON.parse('{{ attendance_labels|escapejs }}');
+        const attendanceData = JSON.parse('{{ attendance_data|escapejs }}');
+        const progressLabels = JSON.parse('{{ progress_labels|escapejs }}');
+        const progressData = JSON.parse('{{ progress_data|escapejs }}');
+        
+        document.getElementById('female-count-label').innerText = genderData[1] || 0;
+        document.getElementById('male-count-label').innerText = genderData[0] || 0;
+
         // Shared Chart Configuration
         Chart.defaults.font.family = "'Inter', 'Suwannaphum', sans-serif";
         Chart.defaults.color = '#64748B';
@@ -412,10 +391,10 @@
         new Chart(ctxStudents, {
             type: 'doughnut',
             data: {
-                labels: ['Girls', 'Boys'],
+                labels: ['Boys', 'Girls'],
                 datasets: [{
-                    data: [234, 193],
-                    backgroundColor: ['#FFB800', '#1E65FF'],
+                    data: genderData,
+                    backgroundColor: ['#1E65FF', '#FFB800'],
                     borderWidth: 0,
                     cutout: '75%'
                 }]
@@ -437,7 +416,7 @@
                     ctx.font = "600 " + fontSize + "em Inter";
                     ctx.textBaseline = "middle";
                     ctx.fillStyle = "#1E293B";
-                    var text = "427",
+                    var text = (genderData[0] + genderData[1]).toString(),
                         textX = Math.round((width - ctx.measureText(text).width) / 2),
                         textY = height / 2;
                     ctx.fillText(text, textX, textY);
@@ -468,24 +447,13 @@
         new Chart(ctxProgress, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                labels: progressLabels,
                 datasets: [
                     {
-                        label: 'Exams',
-                        data: [40, 50, 45, 60, 55, 75, 60, 85],
+                        label: 'Avg Score',
+                        data: progressData,
                         borderColor: '#FFB800',
                         backgroundColor: gradientOrange,
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true,
-                        pointRadius: 0,
-                        pointHoverRadius: 6
-                    },
-                    {
-                        label: 'Homework',
-                        data: [25, 30, 28, 40, 35, 45, 40, 60],
-                        borderColor: '#1E65FF',
-                        backgroundColor: gradientBlue,
                         borderWidth: 3,
                         tension: 0.4,
                         fill: true,
@@ -518,19 +486,12 @@
         new Chart(ctxAttendance, {
             type: 'bar',
             data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                labels: attendanceLabels,
                 datasets: [
                     {
-                        label: 'Present',
-                        data: [85, 90, 80, 75, 95],
+                        label: 'Present %',
+                        data: attendanceData,
                         backgroundColor: '#FFB800',
-                        borderRadius: 6,
-                        barPercentage: 0.5
-                    },
-                    {
-                        label: 'Absent',
-                        data: [15, 10, 20, 25, 5],
-                        backgroundColor: '#1E65FF',
                         borderRadius: 6,
                         barPercentage: 0.5
                     }

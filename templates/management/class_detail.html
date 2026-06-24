@@ -34,7 +34,10 @@
                             <td>{{ enrollment.student.get_gender_display }}</td>
                             <td>{{ enrollment.student.parent_phone }}</td>
                             <td>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger"><i class="bx bx-user-minus"></i> Remove</a>
+                                <form method="post" action="{% url 'management:remove_student_from_class' course.id enrollment.student.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bx bx-user-minus"></i> Remove</button>
+                                </form>
                             </td>
                         </tr>
                         {% empty %}
