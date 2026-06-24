@@ -1,6 +1,5 @@
 /* GenZ Modern Theme - Light Blue & Orange Edition */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/google-sans');
 @import url('https://fonts.googleapis.com/css2?family=Suwannaphum:wght@400;700&display=swap'); /* For Khmer */
 
 :root {
@@ -25,7 +24,7 @@
 body {
     background-color: var(--genz-bg) !important; 
     color: var(--genz-text-main);
-    font-family: 'Plus Jakarta Sans', 'Suwannaphum', sans-serif !important;
+    font-family: 'Google Sans', 'Suwannaphum', sans-serif !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,7 +57,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
-    font-family: 'Inter', 'Suwannaphum', sans-serif !important;
+    font-family: 'Google Sans', 'Suwannaphum', sans-serif !important;
     color: var(--genz-text-main);
 }
 
