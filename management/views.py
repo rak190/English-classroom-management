@@ -1,5 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.core.management import call_command
+from django.contrib.auth.models import User
+from django.db.utils import OperationalError
+import traceback
 from django.db.models import Count, Avg
 from .models import Student, Course, Enrollment, Attendance, Homework, HomeworkSubmission, Score, Material
 from .forms import StudentForm, CourseForm, AttendanceForm, MaterialForm
@@ -153,6 +158,32 @@ from . import ai_utils
 @login_required
 def ai_dashboard_view(request):
     return render(request, 'management/ai_dashboard.html')
+
+@login_required
+def ai_test_generator(request):
+    return render(request, 'management/ai_test.html')
+
+def setup_database(request):
+    """A helper view to automatically run migrations and create a superuser for Vercel deployments"""
+    output = []
+    try:
+        output.append("Starting database migrations...")
+        call_command('migrate', interactive=False)
+        output.append("Migrations completed successfully.")
+        
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+            output.append("Superuser 'admin' created with password 'admin123'.")
+        else:
+            output.append("Superuser 'admin' already exists.")
+            
+        output.append("Setup complete! You can now go to /accounts/login/ and login with admin / admin123")
+        return HttpResponse("<br>".join(output))
+    except Exception as e:
+        output.append("ERROR OCCURRED:")
+        output.append(str(e))
+        output.append(traceback.format_exc().replace('\n', '<br>'))
+        return HttpResponse("<br>".join(output), status=500)
 
 @login_required
 def worksheet_generator_view(request):

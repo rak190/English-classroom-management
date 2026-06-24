@@ -22,4 +22,5 @@ urlpatterns = [
     path('ai/worksheet/', views.worksheet_generator_view, name='ai_worksheet'),
     path('ai/lesson-plan/', views.lesson_plan_generator_view, name='ai_lesson_plan'),
     path('ai/test/', views.test_generator_view, name='ai_test'),
+    path('setup/', views.setup_database, name='setup_database'),
 ]
