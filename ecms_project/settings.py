@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-hxwmt!7do(e%784odrj83ur*7@eafcui=k!5)b6#7inkcnmlk5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+DEBUG = True # Temporarily forcing True for debugging Vercel
 
 ALLOWED_HOSTS = ['*'] # Accept all hosts for Render deployment
 
