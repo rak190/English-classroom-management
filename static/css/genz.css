@@ -1,244 +1,318 @@
-/* Edusync School Management Dashboard CSS Overrides */
-
+/* GenZ Modern Theme - Light Blue & Orange Edition */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Suwannaphum:wght@400;700&display=swap'); /* For Khmer */
 
 :root {
-    /* Edusync Colors */
-    --genz-primary: #C6F900; /* Volt Green */
-    --genz-primary-dark: #A2CC00;
-    --genz-bg: #F5F6F8; /* Main Area Off-White */
-    --genz-sidebar-bg: #0E0E10; /* Dark Charcoal */
-    --genz-text-main: #0E0E10;
-    --genz-text-muted: #76767A;
-    --genz-border: #F1F2F4;
+    /* Main Colors */
+    --genz-primary: #1E65FF; /* Bright Blue */
+    --genz-accent: #FFB800; /* Orange/Yellow */
+    --genz-accent-light: #FFF8E6;
+    --genz-bg: #F4F7FE; /* Soft Light Grey/Blue Background */
+    --genz-card-bg: #FFFFFF;
     
-    /* Accent Backgrounds for Badges/Icons */
-    --accent-indigo: #6366F1;
-    --accent-indigo-bg: #EEF2FF;
-    --accent-blue: #0EA5E9;
-    --accent-blue-bg: #F0F9FF;
-    --accent-orange: #F97316;
-    --accent-orange-bg: #FFF7ED;
-    --accent-green: #10B981;
-    --accent-green-bg: #ECFDF5;
-    --accent-red: #EF4444;
-    --accent-red-bg: #FEF2F2;
-    --accent-yellow: #D97706;
-    --accent-yellow-bg: #FEF3C7;
+    /* Text Colors */
+    --genz-text-main: #1E293B; /* Dark Slate */
+    --genz-text-muted: #64748B;
+    
+    /* UI Elements */
+    --genz-border: #E2E8F0;
+    --genz-radius: 24px;
+    --genz-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    --genz-shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
 }
 
-body, .layout-wrapper, .layout-container {
-    font-family: 'Inter', sans-serif !important;
-    background-color: var(--genz-bg) !important;
-    color: var(--genz-text-main) !important;
+body {
+    background-color: var(--genz-bg) !important; 
+    color: var(--genz-text-main);
+    font-family: 'Plus Jakarta Sans', 'Suwannaphum', sans-serif !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0; /* No padding on mobile */
 }
 
-/* Typography Overrides */
-h1, h2, h3, h4, h5, h6, .card-title, th {
-    font-family: 'Inter', sans-serif !important;
-    color: var(--genz-text-main) !important;
+.app-frame {
+    width: 100%;
+    height: 100vh;
+    background-color: var(--genz-bg);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    transform: translate(0, 0); /* CSS Trick: Contains position:fixed elements inside */
 }
 
-.card-title {
-    font-weight: 600 !important;
-    font-size: 18px !important;
+/* Desktop Presentation Frame styling */
+@media (min-width: 992px) {
+    body {
+        background-color: #E2E8F0 !important;
+        padding: 24px;
+    }
+    .app-frame {
+        max-width: 1600px;
+        height: calc(100vh - 48px);
+        border-radius: 32px;
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08);
+    }
 }
 
-/* Edusync Card Styling (Borderless & Soft Shadow) */
-.card {
-    border: none !important;
-    border-radius: 20px !important;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
-    background: #FFFFFF !important;
-    padding: 8px; /* Internal padding offset */
+h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
+    font-family: 'Inter', 'Suwannaphum', sans-serif !important;
+    color: var(--genz-text-main);
 }
 
-.card-body {
-    padding: 24px !important;
+/* --------------------------------------
+   Layout overrides
+-------------------------------------- */
+.layout-wrapper {
+    background: var(--genz-bg);
+    width: 100%;
+    height: 100%;
 }
 
-/* Sidebar Styling */
+.layout-container {
+    height: 100%;
+}
+
+.layout-page {
+    background: var(--genz-bg);
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.content-wrapper {
+    background: var(--genz-bg);
+}
+
+/* --------------------------------------
+   Sidebar
+-------------------------------------- */
 #layout-menu {
-    background-color: var(--genz-sidebar-bg) !important;
-    border-right: none !important;
+    background-color: #FFFFFF !important;
+    border-right: 1px solid var(--genz-border) !important;
+    height: 100% !important;
+    z-index: 10;
+}
+
+@media (min-width: 992px) {
+    #layout-menu {
+        border-radius: 32px 0 0 32px;
+    }
 }
 
 .app-brand-text {
-    color: #FFFFFF !important;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 700 !important;
-}
-
-.app-brand .bx {
-    color: var(--genz-primary) !important;
-}
-
-.menu-inner .menu-header-text {
-    color: #6E6E73 !important;
-    font-weight: 600 !important;
-}
-
-/* Sidebar Links */
-.menu-item .menu-link {
-    color: #8E8E93 !important;
-    border-radius: 12px !important;
-    margin: 0 12px !important;
-    transition: all 0.2s ease !important;
-    font-weight: 500 !important;
-}
-
-.menu-item .menu-link i {
-    color: #8E8E93 !important;
-}
-
-.menu-item.active > .menu-link {
-    background-color: transparent !important;
-    color: var(--genz-primary) !important;
-    box-shadow: none !important;
-    position: relative;
-}
-
-.menu-item.active > .menu-link i {
-    color: var(--genz-primary) !important;
-}
-
-/* Active Indicator Line */
-.menu-item.active > .menu-link::before {
-    content: '';
-    position: absolute;
-    left: -12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 24px;
-    background-color: var(--genz-primary);
-    border-radius: 0 4px 4px 0;
-}
-
-.menu-item:not(.active) .menu-link:hover {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    color: #FFFFFF !important;
-    transform: translateX(4px) !important;
-}
-
-.menu-item:not(.active) .menu-link:hover i {
-    color: #FFFFFF !important;
-}
-
-/* Navbar Search & Clean layout */
-#layout-navbar {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    margin-top: 1rem !important;
-}
-
-.navbar-nav .nav-item span {
     color: var(--genz-text-main) !important;
+    font-weight: 700;
 }
 
-/* Buttons */
+.menu-inner > .menu-item {
+    margin: 4px 16px;
+    border-radius: 12px;
+}
+
+.menu-inner > .menu-item > .menu-link {
+    color: var(--genz-text-muted) !important;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.menu-inner > .menu-item > .menu-link i {
+    color: var(--genz-text-muted) !important;
+    transition: all 0.2s ease;
+}
+
+.menu-inner > .menu-item:hover > .menu-link {
+    background-color: rgba(30, 101, 255, 0.05) !important;
+    color: var(--genz-primary) !important;
+}
+
+.menu-inner > .menu-item.active > .menu-link {
+    background-color: rgba(30, 101, 255, 0.1) !important;
+    color: var(--genz-primary) !important;
+    font-weight: 600;
+}
+
+.menu-inner > .menu-item.active > .menu-link i {
+    color: var(--genz-primary) !important;
+}
+
+/* --------------------------------------
+   Top Navbar
+-------------------------------------- */
+.layout-navbar {
+    background-color: var(--genz-bg) !important;
+    backdrop-filter: blur(8px);
+    box-shadow: none !important;
+    border-bottom: none !important;
+    position: sticky !important;
+    top: 0;
+    z-index: 9;
+}
+
+/* --------------------------------------
+   Cards
+-------------------------------------- */
+.card {
+    background-color: var(--genz-card-bg) !important;
+    border: none !important;
+    border-radius: var(--genz-radius) !important;
+    box-shadow: var(--genz-shadow) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+/* Specific colored cards for top metrics */
+.card-metric-orange {
+    background: #FFC107 !important; /* Yellow/Orange */
+    color: #1E293B !important;
+    box-shadow: 0 10px 20px -5px rgba(255, 193, 7, 0.3) !important;
+}
+
+.card-metric-orange .card-title,
+.card-metric-orange .card-text,
+.card-metric-orange .text-muted {
+    color: #1E293B !important;
+}
+
+.card-metric-orange .metric-icon {
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-metric-blue {
+    background: var(--genz-primary) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 10px 20px -5px rgba(30, 101, 255, 0.3) !important;
+}
+
+.card-metric-blue .card-title,
+.card-metric-blue .card-text,
+.card-metric-blue .text-muted {
+    color: #FFFFFF !important;
+}
+
+.card-metric-blue .metric-icon {
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --------------------------------------
+   Buttons
+-------------------------------------- */
 .btn-primary {
     background-color: var(--genz-primary) !important;
-    border: none !important;
-    color: #0E0E10 !important;
-    font-weight: 600 !important;
-    border-radius: 12px !important;
-    padding: 10px 24px !important;
-    box-shadow: 0 4px 14px 0 rgba(198, 249, 0, 0.2) !important;
-    transition: all 0.3s ease !important;
+    border-color: var(--genz-primary) !important;
+    color: white !important;
+    border-radius: 12px;
+    font-weight: 600;
 }
 
 .btn-primary:hover {
-    background-color: var(--genz-primary-dark) !important;
-    transform: translateY(-2px);
+    background-color: #1557E0 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px -3px rgba(30, 101, 255, 0.3);
 }
 
-/* Tables */
-.table {
-    color: var(--genz-text-main) !important;
+.btn-warning {
+    background-color: var(--genz-accent) !important;
+    border-color: var(--genz-accent) !important;
+    color: #1E293B !important;
+    font-weight: 600;
 }
 
-.table th {
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    color: var(--genz-text-muted) !important;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--genz-border) !important;
-    padding: 16px 24px !important;
-}
-
-.table td {
-    padding: 16px 24px !important;
-    border-bottom: 1px solid var(--genz-border) !important;
-    vertical-align: middle;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #FAFAFA !important;
-}
-
-/* Status Badges */
+/* --------------------------------------
+   Badges & Pills
+-------------------------------------- */
 .badge {
-    padding: 6px 12px !important;
-    border-radius: 9999px !important;
-    font-weight: 600 !important;
-    font-size: 12px !important;
-}
-
-/* Edusync Specific Badges */
-.bg-label-success {
-    background-color: var(--accent-green-bg) !important;
-    color: var(--accent-green) !important;
-}
-
-.bg-label-warning {
-    background-color: var(--accent-yellow-bg) !important;
-    color: var(--accent-yellow) !important;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-weight: 600;
 }
 
 .bg-label-primary {
-    background-color: var(--accent-indigo-bg) !important;
-    color: var(--accent-indigo) !important;
+    background-color: rgba(30, 101, 255, 0.1) !important;
+    color: var(--genz-primary) !important;
 }
 
-.bg-label-info {
-    background-color: var(--accent-blue-bg) !important;
-    color: var(--accent-blue) !important;
+.bg-label-warning {
+    background-color: rgba(255, 184, 0, 0.1) !important;
+    color: #D97706 !important;
 }
 
-/* Form Controls */
+.bg-label-success {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    color: #10B981 !important;
+}
+
+/* --------------------------------------
+   Tables
+-------------------------------------- */
+.table th {
+    color: var(--genz-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--genz-border) !important;
+}
+
+.table td {
+    vertical-align: middle;
+    border-bottom: 1px solid var(--genz-border);
+}
+
+/* --------------------------------------
+   Forms
+-------------------------------------- */
 .form-control, .form-select {
-    border: 1px solid var(--genz-border) !important;
-    border-radius: 12px !important;
-    padding: 12px 16px !important;
-    font-family: 'Inter', sans-serif !important;
-    background-color: #FFFFFF !important;
-    color: var(--genz-text-main) !important;
+    border-radius: 12px;
+    border: 1px solid var(--genz-border);
+    padding: 10px 14px;
+    background-color: #F8FAFC;
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: var(--genz-text-muted) !important;
-    box-shadow: 0 0 0 4px rgba(118, 118, 122, 0.1) !important;
+    border-color: var(--genz-primary);
+    box-shadow: 0 0 0 3px rgba(30, 101, 255, 0.1);
+    background-color: #FFFFFF;
 }
 
-/* Metric Accents */
-.metric-icon-box {
-    width: 48px;
-    height: 48px;
+/* --------------------------------------
+   Lists (Notice Board, Messages)
+-------------------------------------- */
+.list-item-box {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: 16px;
+    transition: background 0.2s ease;
+    margin-bottom: 12px;
+    border: 1px solid transparent;
+}
+
+.list-item-box:hover {
+    background-color: #F8FAFC;
+    border-color: var(--genz-border);
+}
+
+.icon-box {
+    width: 40px;
+    height: 40px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 20px;
 }
-.metric-indigo { background-color: var(--accent-indigo-bg); color: var(--accent-indigo); }
-.metric-blue { background-color: var(--accent-blue-bg); color: var(--accent-blue); }
-.metric-orange { background-color: var(--accent-orange-bg); color: var(--accent-orange); }
-.metric-green { background-color: var(--accent-green-bg); color: var(--accent-green); }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background-color: #E2E8F0; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background-color: #CBD5E1; }

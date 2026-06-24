@@ -1,10 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{% static 'sneat/' %}" data-template="vertical-menu-template-free">
+<html lang="km" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{% static 'sneat/' %}" data-template="vertical-menu-template-free">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>{% block title %}ECMS{% endblock %}</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#1E65FF">
+    <link rel="apple-touch-icon" href="{% static 'img/icons/icon-192x192.png' %}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Edusync">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'sneat/img/favicon/favicon.ico' %}" />
@@ -28,20 +36,25 @@
     <script src="{% static 'sneat/vendor/js/helpers.js' %}"></script>
     <script src="{% static 'sneat/js/config.js' %}"></script>
     
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link rel="stylesheet" href="{% static 'css/genz.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 
 <body>
-    <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
+    <!-- App Presentation Frame (Matches reference image) -->
+    <div class="app-frame">
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <!-- Menu -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu">
                 <div class="app-brand demo mt-3 mb-2">
                     <a href="{% url 'management:dashboard' %}" class="app-brand-link">
                         <span class="app-brand-logo demo d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: var(--genz-primary); border-radius: 8px;">
-                            <span class="fw-bold fs-5 text-dark" style="font-family: 'Inter', sans-serif;">E</span>
+                            <span class="fw-bold fs-5 text-white" style="font-family: 'Inter', sans-serif;">E</span>
                         </span>
                         <span class="app-brand-text demo menu-text fw-bold ms-2" style="text-transform: capitalize;">Edusync</span>
                     </a>
@@ -63,80 +76,80 @@
                     </li>
 
                     <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">Management</span>
+                        <span class="menu-header-text">ការគ្រប់គ្រង (Management)</span>
                     </li>
                     <li class="menu-item {% if 'student' in request.resolver_match.url_name %}active{% endif %}">
                         <a href="{% url 'management:student_list' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-user"></i>
-                            <div data-i18n="Students">Students</div>
+                            <div data-i18n="Students">សិស្ស (Students)</div>
                         </a>
                     </li>
                     <li class="menu-item {% if 'class' in request.resolver_match.url_name %}active{% endif %}">
                         <a href="{% url 'management:class_list' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-book-bookmark"></i>
-                            <div data-i18n="Classes">Classes</div>
+                            <div data-i18n="Classes">ថ្នាក់រៀន (Classes)</div>
                         </a>
                     </li>
                     <li class="menu-item {% if request.resolver_match.url_name == 'attendance_view' %}active{% endif %}">
                         <a href="{% url 'management:attendance_view' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-calendar-check"></i>
-                            <div data-i18n="Attendance">Attendance</div>
+                            <div data-i18n="Attendance">វត្តមាន (Attendance)</div>
                         </a>
                     </li>
 
                     <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">Academics</span>
+                        <span class="menu-header-text">ការសិក្សា (Academics)</span>
                     </li>
                     <li class="menu-item {% if request.resolver_match.url_name == 'schedule_view' %}active{% endif %}">
                         <a href="{% url 'management:schedule_view' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-time"></i>
-                            <div data-i18n="Schedule">Schedule</div>
+                            <div data-i18n="Schedule">កាលវិភាគ (Schedule)</div>
                         </a>
                     </li>
                     <li class="menu-item {% if request.resolver_match.url_name == 'progress_tracking_view' %}active{% endif %}">
                         <a href="{% url 'management:progress_tracking_view' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-line-chart"></i>
-                            <div data-i18n="Progress">Progress</div>
+                            <div data-i18n="Progress">វឌ្ឍនភាព (Progress)</div>
                         </a>
                     </li>
                     <li class="menu-item {% if request.resolver_match.url_name == 'homework_view' %}active{% endif %}">
                         <a href="{% url 'management:homework_view' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-edit-alt"></i>
-                            <div data-i18n="Homework">Homework</div>
+                            <div data-i18n="Homework">កិច្ចការផ្ទះ (Homework)</div>
                         </a>
                     </li>
                     <li class="menu-item {% if request.resolver_match.url_name == 'score_view' %}active{% endif %}">
                         <a href="{% url 'management:score_view' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-chart"></i>
-                            <div data-i18n="Scores">Scores</div>
+                            <div data-i18n="Scores">ពិន្ទុ (Scores)</div>
                         </a>
                     </li>
                     <li class="menu-item {% if request.resolver_match.url_name == 'material_view' %}active{% endif %}">
                         <a href="{% url 'management:material_view' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-folder-open"></i>
-                            <div data-i18n="Materials">Materials</div>
+                            <div data-i18n="Materials">ឯកសារ (Materials)</div>
                         </a>
                     </li>
                     
                     <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">Generative AI</span>
+                        <span class="menu-header-text">បញ្ញាសិប្បនិម្មិត (AI)</span>
                     </li>
                     <li class="menu-item {% if 'ai' in request.resolver_match.url_name %}active{% endif %}">
                         <a href="{% url 'management:ai_dashboard' %}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-bot text-primary"></i>
-                            <div data-i18n="AI Tools">AI Tools 🤖</div>
+                            <div data-i18n="AI Tools">ឧបករណ៍ AI (Tools) 🤖</div>
                         </a>
                     </li>
                     
                     <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">Account</span>
+                        <span class="menu-header-text">គណនី (Account)</span>
                     </li>
                     <li class="menu-item">
                         <form method="post" action="{% url 'logout' %}" class="d-inline w-100">
                             {% csrf_token %}
                             <button type="submit" class="menu-link text-danger bg-transparent border-0 w-100 text-start" style="cursor: pointer;">
                                 <i class="menu-icon tf-icons bx bx-log-out"></i>
-                                <div data-i18n="Logout">Logout</div>
+                                <div data-i18n="Logout">ចាកចេញ (Logout)</div>
                             </button>
                         </form>
                     </li>
@@ -159,7 +172,7 @@
                         <div class="navbar-nav align-items-center" style="flex: 1;">
                             <div class="nav-item d-flex align-items-center" style="width: 100%; max-width: 400px; background-color: #FFFFFF; border-radius: 9999px; padding: 8px 16px; border: 1px solid var(--genz-border);">
                                 <i class="bx bx-search fs-4 lh-0 text-muted"></i>
-                                <input type="text" class="form-control border-0 shadow-none bg-transparent" placeholder="Search anything..." aria-label="Search..." style="padding-left: 8px;" />
+                                <input type="text" class="form-control border-0 shadow-none bg-transparent" placeholder="ស្វែងរក... (Search)" aria-label="Search..." style="padding-left: 8px;" />
                             </div>
                         </div>
                         <!-- /Search -->
@@ -179,11 +192,11 @@
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow d-flex align-items-center" href="javascript:void(0);" data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online me-2">
-                                        <img src="https://ui-avatars.com/api/?name=Teacher&background=C6F900&color=0E0E10" alt class="w-px-40 h-auto rounded-circle" />
+                                        <img src="https://ui-avatars.com/api/?name=Teacher&background=1E65FF&color=FFFFFF" alt class="w-px-40 h-auto rounded-circle" />
                                     </div>
                                     <div class="d-none d-md-flex flex-column text-start me-2">
-                                        <span class="fw-bold text-dark fs-6" style="line-height: 1;">Teacher</span>
-                                        <small class="text-muted" style="line-height: 1; margin-top: 2px;">Admin</small>
+                                        <span class="fw-bold text-dark fs-6" style="line-height: 1;">គ្រូបង្រៀន (Teacher)</span>
+                                        <small class="text-muted" style="line-height: 1; margin-top: 2px;">អ្នកគ្រប់គ្រង (Admin)</small>
                                     </div>
                                     <i class="bx bx-chevron-down text-dark"></i>
                                 </a>
@@ -193,12 +206,12 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-                                                        <img src="https://ui-avatars.com/api/?name=Teacher&background=C6F900&color=0E0E10" alt class="w-px-40 h-auto rounded-circle" />
+                                                        <img src="https://ui-avatars.com/api/?name=Teacher&background=1E65FF&color=FFFFFF" alt class="w-px-40 h-auto rounded-circle" />
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-bold d-block">Teacher</span>
-                                                    <small class="text-muted">Admin</small>
+                                                    <span class="fw-bold d-block">គ្រូបង្រៀន (Teacher)</span>
+                                                    <small class="text-muted">អ្នកគ្រប់គ្រង (Admin)</small>
                                                 </div>
                                             </div>
                                         </a>
@@ -225,7 +238,7 @@
                         <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
                             <div class="mb-2 mb-md-0">
                                 © <script>document.write(new Date().getFullYear());</script>
-                                , made with ❤️ for English Teachers.
+                                , រៀបចំសម្រាប់គ្រូបង្រៀន (Made for Teachers).
                             </div>
                         </div>
                     </footer>
@@ -242,6 +255,8 @@
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
     <!-- / Layout wrapper -->
+    </div>
+    <!-- / App Presentation Frame -->
 
     <!-- Core JS -->
     <script src="{% static 'sneat/vendor/libs/jquery/jquery.js' %}"></script>
@@ -252,6 +267,21 @@
 
     <!-- Main JS -->
     <script src="{% static 'sneat/js/main.js' %}"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
     
     {% block extra_js %}{% endblock %}
 </body>
