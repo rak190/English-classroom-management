@@ -46,12 +46,12 @@ body {
 @media (min-width: 992px) {
     body {
         background-color: #E2E8F0 !important;
-        padding: 24px;
+        padding: 12px; /* Reduced from 24px */
     }
     .app-frame {
-        max-width: 1600px;
-        height: calc(100vh - 48px);
-        border-radius: 32px;
+        max-width: 1920px; /* Increased from 1600px */
+        height: calc(100vh - 24px); /* Adjusted for new padding */
+        border-radius: 24px; /* Slightly reduced radius */
         box-shadow: 0 40px 100px rgba(0, 0, 0, 0.08);
     }
 }
