@@ -2,85 +2,85 @@
 {% load static %}
 
 {% block title %}Dashboard - ECMS{% endblock %}
-{% block header_title %}Dashboard{% endblock %}
+{% block header_title %}Welcome back, Teacher! 👋{% endblock %}
 
 {% block content %}
 <div class="row">
+    <!-- Students Metric -->
     <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                     <div class="card-info">
-                        <p class="card-text text-muted mb-1">Total Students</p>
-                        <div class="d-flex align-items-end mb-2">
-                            <h4 class="card-title mb-0 me-2">{{ total_students }}</h4>
-                        </div>
+                        <p class="card-text text-muted mb-1 fw-medium" style="font-size: 13px;">Total Students</p>
+                        <h3 class="card-title mb-0 fw-bold">{{ total_students }}</h3>
                     </div>
-                    <div class="card-icon">
-                        <span class="badge bg-label-primary rounded p-2">
-                            <i class="bx bx-user bx-sm"></i>
-                        </span>
+                    <div class="metric-icon-box metric-indigo">
+                        <i class="bx bx-user"></i>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-label-success">+12%</span> <span class="text-muted ms-1" style="font-size: 12px;">from last month</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Classes Metric -->
     <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                     <div class="card-info">
-                        <p class="card-text text-muted mb-1">Active Classes</p>
-                        <div class="d-flex align-items-end mb-2">
-                            <h4 class="card-title mb-0 me-2">{{ active_classes }}</h4>
-                        </div>
+                        <p class="card-text text-muted mb-1 fw-medium" style="font-size: 13px;">Active Classes</p>
+                        <h3 class="card-title mb-0 fw-bold">{{ active_classes }}</h3>
                     </div>
-                    <div class="card-icon">
-                        <span class="badge bg-label-success rounded p-2">
-                            <i class="bx bx-book-bookmark bx-sm"></i>
-                        </span>
+                    <div class="metric-icon-box metric-orange">
+                        <i class="bx bx-book-bookmark"></i>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-label-warning">Stable</span> <span class="text-muted ms-1" style="font-size: 12px;">this semester</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Attendance Metric -->
     <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                     <div class="card-info">
-                        <p class="card-text text-muted mb-1">Today's Attendance</p>
-                        <div class="d-flex align-items-end mb-2">
-                            <h4 class="card-title mb-0 me-2">{{ today_attendance_present }}/{{ today_attendance_total }}</h4>
-                        </div>
+                        <p class="card-text text-muted mb-1 fw-medium" style="font-size: 13px;">Today's Attendance</p>
+                        <h3 class="card-title mb-0 fw-bold">{{ today_attendance_present }}/{{ today_attendance_total }}</h3>
                     </div>
-                    <div class="card-icon">
-                        <span class="badge bg-label-warning rounded p-2">
-                            <i class="bx bx-calendar-check bx-sm"></i>
-                        </span>
+                    <div class="metric-icon-box metric-green">
+                        <i class="bx bx-calendar-check"></i>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-label-success">Good</span> <span class="text-muted ms-1" style="font-size: 12px;">attendance rate</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- HW Metric -->
     <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                     <div class="card-info">
-                        <p class="card-text text-muted mb-1">HW Submitted</p>
-                        <div class="d-flex align-items-end mb-2">
-                            <h4 class="card-title mb-0 me-2">{{ hw_submitted }}/{{ hw_total }}</h4>
-                        </div>
+                        <p class="card-text text-muted mb-1 fw-medium" style="font-size: 13px;">HW Submitted</p>
+                        <h3 class="card-title mb-0 fw-bold">{{ hw_submitted }}/{{ hw_total }}</h3>
                     </div>
-                    <div class="card-icon">
-                        <span class="badge bg-label-info rounded p-2">
-                            <i class="bx bx-edit-alt bx-sm"></i>
-                        </span>
+                    <div class="metric-icon-box metric-blue">
+                        <i class="bx bx-edit-alt"></i>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge bg-label-info">Pending Review</span>
                 </div>
             </div>
         </div>
@@ -88,34 +88,48 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6 col-lg-6 mb-4">
+    <!-- Quick Actions -->
+    <div class="col-md-5 col-lg-4 mb-4">
         <div class="card h-100">
-            <div class="card-header d-flex align-items-center justify-content-between">
+            <div class="card-header d-flex align-items-center justify-content-between pb-0">
                 <h5 class="card-title m-0 me-2">Quick Actions</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body mt-3">
                 <div class="d-grid gap-3">
-                    <a href="{% url 'management:student_create' %}" class="btn btn-outline-primary text-start">
-                        <i class="bx bx-user-plus me-2"></i> Add New Student
+                    <a href="{% url 'management:student_create' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-start text-dark" style="border-radius: 12px; padding: 12px 16px;">
+                        <div class="metric-icon-box metric-indigo me-3" style="width: 32px; height: 32px; font-size: 16px;">
+                            <i class="bx bx-user-plus"></i>
+                        </div>
+                        <span class="fw-medium">Add New Student</span>
                     </a>
-                    <a href="{% url 'management:attendance_view' %}" class="btn btn-outline-success text-start">
-                        <i class="bx bx-check-circle me-2"></i> Mark Attendance
+                    <a href="{% url 'management:attendance_view' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-start text-dark" style="border-radius: 12px; padding: 12px 16px;">
+                        <div class="metric-icon-box metric-green me-3" style="width: 32px; height: 32px; font-size: 16px;">
+                            <i class="bx bx-check-circle"></i>
+                        </div>
+                        <span class="fw-medium">Mark Attendance</span>
                     </a>
-                    <a href="{% url 'management:material_view' %}" class="btn btn-outline-info text-start">
-                        <i class="bx bx-upload me-2"></i> Upload Materials
+                    <a href="{% url 'management:material_view' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-start text-dark" style="border-radius: 12px; padding: 12px 16px;">
+                        <div class="metric-icon-box metric-orange me-3" style="width: 32px; height: 32px; font-size: 16px;">
+                            <i class="bx bx-upload"></i>
+                        </div>
+                        <span class="fw-medium">Upload Materials</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-6 col-lg-6 mb-4">
-        <div class="card h-100">
-            <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                <i class="bx bx-rocket text-primary mb-3" style="font-size: 4rem;"></i>
-                <h4 class="fw-bold">Ready to Teach!</h4>
-                <p class="text-muted">Manage your classes efficiently with the English Class Management System.</p>
+    <!-- Placeholder for Chart / Graphic -->
+    <div class="col-md-7 col-lg-8 mb-4">
+        <div class="card h-100" style="background: linear-gradient(135deg, #0E0E10 0%, #1A1A1E 100%);">
+            <div class="card-body d-flex flex-column align-items-start justify-content-center text-start p-5">
+                <span class="badge bg-label-primary mb-3 text-white" style="background: rgba(198, 249, 0, 0.2) !important; color: #C6F900 !important;">Pro Upgrade</span>
+                <h3 class="fw-bold text-white mb-2" style="font-family: 'Inter', sans-serif;">Unlock Advanced AI Insights</h3>
+                <p class="text-white-50 mb-4" style="max-width: 400px;">Get detailed learning curves and automated lesson planning with Edusync Pro.</p>
+                <button class="btn btn-primary shadow-none">Upgrade Now</button>
             </div>
+            <!-- Decorative element -->
+            <i class="bx bx-chart position-absolute" style="font-size: 200px; right: -20px; bottom: -40px; color: rgba(255,255,255,0.03);"></i>
         </div>
     </div>
 </div>

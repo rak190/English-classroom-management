@@ -37,13 +37,13 @@
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <!-- Menu -->
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                <div class="app-brand demo">
+            <aside id="layout-menu" class="layout-menu menu-vertical menu">
+                <div class="app-brand demo mt-3 mb-2">
                     <a href="{% url 'management:dashboard' %}" class="app-brand-link">
-                        <span class="app-brand-logo demo">
-                            <i class="bx bxs-graduation text-primary fs-3"></i>
+                        <span class="app-brand-logo demo d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: var(--genz-primary); border-radius: 8px;">
+                            <span class="fw-bold fs-5 text-dark" style="font-family: 'Inter', sans-serif;">E</span>
                         </span>
-                        <span class="app-brand-text demo menu-text fw-bold ms-2" style="text-transform: capitalize;">ECMS</span>
+                        <span class="app-brand-text demo menu-text fw-bold ms-2" style="text-transform: capitalize;">Edusync</span>
                     </a>
 
                     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -147,7 +147,7 @@
             <!-- Layout container -->
             <div class="layout-page">
                 <!-- Navbar -->
-                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center" id="layout-navbar">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
                         <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
                             <i class="bx bx-menu bx-sm"></i>
@@ -156,22 +156,36 @@
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <!-- Search -->
-                        <div class="navbar-nav align-items-center">
-                            <div class="nav-item d-flex align-items-center">
-                                <span class="fw-bold fs-4 text-primary">{% block header_title %}Dashboard{% endblock %}</span>
+                        <div class="navbar-nav align-items-center" style="flex: 1;">
+                            <div class="nav-item d-flex align-items-center" style="width: 100%; max-width: 400px; background-color: #FFFFFF; border-radius: 9999px; padding: 8px 16px; border: 1px solid var(--genz-border);">
+                                <i class="bx bx-search fs-4 lh-0 text-muted"></i>
+                                <input type="text" class="form-control border-0 shadow-none bg-transparent" placeholder="Search anything..." aria-label="Search..." style="padding-left: 8px;" />
                             </div>
                         </div>
                         <!-- /Search -->
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
+                            <!-- Notification Bell -->
+                            <li class="nav-item lh-1 me-3">
+                                <a class="nav-link bg-white rounded-circle d-flex align-items-center justify-content-center position-relative" href="javascript:void(0)" style="width: 40px; height: 40px; border: 1px solid var(--genz-border);">
+                                    <i class="bx bx-bell fs-4 text-dark"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" style="margin-top: 5px; margin-left: -10px;">
+                                        <span class="visually-hidden">New alerts</span>
+                                    </span>
+                                </a>
+                            </li>
+
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                    <div class="avatar avatar-online">
-                                        <div class="bg-primary rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                            TE
-                                        </div>
+                                <a class="nav-link dropdown-toggle hide-arrow d-flex align-items-center" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    <div class="avatar avatar-online me-2">
+                                        <img src="https://ui-avatars.com/api/?name=Teacher&background=C6F900&color=0E0E10" alt class="w-px-40 h-auto rounded-circle" />
                                     </div>
+                                    <div class="d-none d-md-flex flex-column text-start me-2">
+                                        <span class="fw-bold text-dark fs-6" style="line-height: 1;">Teacher</span>
+                                        <small class="text-muted" style="line-height: 1; margin-top: 2px;">Admin</small>
+                                    </div>
+                                    <i class="bx bx-chevron-down text-dark"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
@@ -179,13 +193,11 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-                                                        <div class="bg-primary rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                            TE
-                                                        </div>
+                                                        <img src="https://ui-avatars.com/api/?name=Teacher&background=C6F900&color=0E0E10" alt class="w-px-40 h-auto rounded-circle" />
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-medium d-block">Teacher</span>
+                                                    <span class="fw-bold d-block">Teacher</span>
                                                     <small class="text-muted">Admin</small>
                                                 </div>
                                             </div>

@@ -1,192 +1,244 @@
-/* Clean Gen Z CSS Overrides for Sneat */
+/* Edusync School Management Dashboard CSS Overrides */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --genz-primary: #6366f1; /* Indigo */
-    --genz-primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-    --genz-bg: #f8fafc; /* Very soft blue-gray */
-    --genz-text-main: #1e293b;
-    --genz-border: #e2e8f0;
+    /* Edusync Colors */
+    --genz-primary: #C6F900; /* Volt Green */
+    --genz-primary-dark: #A2CC00;
+    --genz-bg: #F5F6F8; /* Main Area Off-White */
+    --genz-sidebar-bg: #0E0E10; /* Dark Charcoal */
+    --genz-text-main: #0E0E10;
+    --genz-text-muted: #76767A;
+    --genz-border: #F1F2F4;
+    
+    /* Accent Backgrounds for Badges/Icons */
+    --accent-indigo: #6366F1;
+    --accent-indigo-bg: #EEF2FF;
+    --accent-blue: #0EA5E9;
+    --accent-blue-bg: #F0F9FF;
+    --accent-orange: #F97316;
+    --accent-orange-bg: #FFF7ED;
+    --accent-green: #10B981;
+    --accent-green-bg: #ECFDF5;
+    --accent-red: #EF4444;
+    --accent-red-bg: #FEF2F2;
+    --accent-yellow: #D97706;
+    --accent-yellow-bg: #FEF3C7;
 }
 
 body, .layout-wrapper, .layout-container {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-family: 'Inter', sans-serif !important;
     background-color: var(--genz-bg) !important;
-}
-
-/* Typography Overrides */
-h1, h2, h3, h4, h5, h6, .card-title, .app-brand-text, th {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-weight: 700 !important;
-    letter-spacing: -0.02em;
     color: var(--genz-text-main) !important;
 }
 
-/* Clean, Soft Cards (Bento Style) */
-.card {
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03), 0 8px 10px -6px rgba(0, 0, 0, 0.01) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(10px);
+/* Typography Overrides */
+h1, h2, h3, h4, h5, h6, .card-title, th {
+    font-family: 'Inter', sans-serif !important;
+    color: var(--genz-text-main) !important;
 }
 
-.card:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.02) !important;
-}
-
-/* Vibrant Buttons */
-.btn-primary {
-    background: var(--genz-primary-gradient) !important;
-    border: none !important;
-    border-radius: 12px !important;
-    color: white !important;
+.card-title {
     font-weight: 600 !important;
-    box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39) !important;
+    font-size: 18px !important;
+}
+
+/* Edusync Card Styling (Borderless & Soft Shadow) */
+.card {
+    border: none !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+    background: #FFFFFF !important;
+    padding: 8px; /* Internal padding offset */
+}
+
+.card-body {
+    padding: 24px !important;
+}
+
+/* Sidebar Styling */
+#layout-menu {
+    background-color: var(--genz-sidebar-bg) !important;
+    border-right: none !important;
+}
+
+.app-brand-text {
+    color: #FFFFFF !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+}
+
+.app-brand .bx {
+    color: var(--genz-primary) !important;
+}
+
+.menu-inner .menu-header-text {
+    color: #6E6E73 !important;
+    font-weight: 600 !important;
+}
+
+/* Sidebar Links */
+.menu-item .menu-link {
+    color: #8E8E93 !important;
+    border-radius: 12px !important;
+    margin: 0 12px !important;
+    transition: all 0.2s ease !important;
+    font-weight: 500 !important;
+}
+
+.menu-item .menu-link i {
+    color: #8E8E93 !important;
+}
+
+.menu-item.active > .menu-link {
+    background-color: transparent !important;
+    color: var(--genz-primary) !important;
+    box-shadow: none !important;
+    position: relative;
+}
+
+.menu-item.active > .menu-link i {
+    color: var(--genz-primary) !important;
+}
+
+/* Active Indicator Line */
+.menu-item.active > .menu-link::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 24px;
+    background-color: var(--genz-primary);
+    border-radius: 0 4px 4px 0;
+}
+
+.menu-item:not(.active) .menu-link:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #FFFFFF !important;
+    transform: translateX(4px) !important;
+}
+
+.menu-item:not(.active) .menu-link:hover i {
+    color: #FFFFFF !important;
+}
+
+/* Navbar Search & Clean layout */
+#layout-navbar {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    margin-top: 1rem !important;
+}
+
+.navbar-nav .nav-item span {
+    color: var(--genz-text-main) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--genz-primary) !important;
+    border: none !important;
+    color: #0E0E10 !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    padding: 10px 24px !important;
+    box-shadow: 0 4px 14px 0 rgba(198, 249, 0, 0.2) !important;
     transition: all 0.3s ease !important;
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.23) !important;
-    background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%) !important;
-}
-
-.btn-outline-primary {
-    color: var(--genz-primary) !important;
-    border: 2px solid var(--genz-primary) !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    transition: all 0.3s ease !important;
-}
-
-.btn-outline-primary:hover {
-    background: rgba(99, 102, 241, 0.05) !important;
-    transform: translateY(-2px) !important;
-}
-
-/* Sidebar Clean Styling */
-#layout-menu {
-    border-right: 1px solid var(--genz-border) !important;
-    background-color: #ffffff !important;
-}
-
-.menu-item.active > .menu-link {
-    background: var(--genz-primary-gradient) !important;
-    color: white !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2) !important;
-    margin: 0 12px !important;
-    font-weight: 600 !important;
-}
-
-.menu-item.active > .menu-link i {
-    color: white !important;
-}
-
-.menu-item .menu-link {
-    border-radius: 12px !important;
-    margin: 0 12px !important;
-    transition: all 0.2s ease !important;
-}
-
-.menu-item:not(.active) .menu-link:hover {
-    background-color: #f1f5f9 !important;
-    transform: translateX(4px) !important;
-}
-
-/* Navbar */
-#layout-navbar {
-    border: none !important;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03) !important;
-    margin-top: 1rem !important;
-    background: rgba(255, 255, 255, 0.85) !important;
-    backdrop-filter: blur(12px) !important;
+    background-color: var(--genz-primary-dark) !important;
+    transform: translateY(-2px);
 }
 
 /* Tables */
-.table-hover tbody tr {
-    transition: all 0.2s ease !important;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #f8fafc !important;
-    transform: scale(1.002);
+.table {
+    color: var(--genz-text-main) !important;
 }
 
 .table th {
-    font-size: 0.8rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    color: #64748b !important;
-    border-bottom: 2px solid var(--genz-border) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: var(--genz-text-muted) !important;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--genz-border) !important;
+    padding: 16px 24px !important;
 }
 
-/* Beautiful Form Controls */
+.table td {
+    padding: 16px 24px !important;
+    border-bottom: 1px solid var(--genz-border) !important;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #FAFAFA !important;
+}
+
+/* Status Badges */
+.badge {
+    padding: 6px 12px !important;
+    border-radius: 9999px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+}
+
+/* Edusync Specific Badges */
+.bg-label-success {
+    background-color: var(--accent-green-bg) !important;
+    color: var(--accent-green) !important;
+}
+
+.bg-label-warning {
+    background-color: var(--accent-yellow-bg) !important;
+    color: var(--accent-yellow) !important;
+}
+
+.bg-label-primary {
+    background-color: var(--accent-indigo-bg) !important;
+    color: var(--accent-indigo) !important;
+}
+
+.bg-label-info {
+    background-color: var(--accent-blue-bg) !important;
+    color: var(--accent-blue) !important;
+}
+
+/* Form Controls */
 .form-control, .form-select {
     border: 1px solid var(--genz-border) !important;
     border-radius: 12px !important;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    transition: all 0.2s ease !important;
-    background-color: #f8fafc !important;
+    padding: 12px 16px !important;
+    font-family: 'Inter', sans-serif !important;
+    background-color: #FFFFFF !important;
+    color: var(--genz-text-main) !important;
 }
 
 .form-control:focus, .form-select:focus {
-    background-color: #ffffff !important;
-    border-color: var(--genz-primary) !important;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
-    transform: translateY(-1px) !important;
+    border-color: var(--genz-text-muted) !important;
+    box-shadow: 0 0 0 4px rgba(118, 118, 122, 0.1) !important;
 }
 
-/* Clean Badges */
-.badge {
-    border-radius: 8px !important;
-    padding: 0.4em 0.8em !important;
-    font-weight: 600 !important;
+/* Metric Accents */
+.metric-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
 }
+.metric-indigo { background-color: var(--accent-indigo-bg); color: var(--accent-indigo); }
+.metric-blue { background-color: var(--accent-blue-bg); color: var(--accent-blue); }
+.metric-orange { background-color: var(--accent-orange-bg); color: var(--accent-orange); }
+.metric-green { background-color: var(--accent-green-bg); color: var(--accent-green); }
 
-.badge.bg-label-primary {
-    background-color: rgba(99, 102, 241, 0.1) !important;
-    color: var(--genz-primary) !important;
-}
-
-.badge.bg-label-success {
-    background-color: rgba(16, 185, 129, 0.1) !important;
-    color: #10b981 !important;
-}
-
-.badge.bg-label-warning {
-    background-color: rgba(245, 158, 11, 0.1) !important;
-    color: #f59e0b !important;
-}
-
-.badge.bg-label-info {
-    background-color: rgba(14, 165, 233, 0.1) !important;
-    color: #0ea5e9 !important;
-}
-
-.badge.bg-label-danger {
-    background-color: rgba(239, 68, 68, 0.1) !important;
-    color: #ef4444 !important;
-}
-
-/* Subtly beautiful scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background-color: #cbd5e1;
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background-color: #94a3b8;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: #E2E8F0; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background-color: #CBD5E1; }
