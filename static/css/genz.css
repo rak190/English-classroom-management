@@ -65,7 +65,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
    Layout overrides
 -------------------------------------- */
 .layout-wrapper {
-    background: var(--genz-bg);
+    background: #FFFFFF !important;
     width: 100%;
     height: 100%;
 }
@@ -75,7 +75,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
 }
 
 .layout-page {
-    background: var(--genz-bg);
+    background: #FFFFFF !important;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
@@ -83,6 +83,9 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
 
 .content-wrapper {
     background: var(--genz-bg);
+    margin: 0 16px 16px 16px;
+    border-radius: 32px;
+    overflow: hidden;
 }
 
 /* --------------------------------------
@@ -141,13 +144,14 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
    Top Navbar
 -------------------------------------- */
 .layout-navbar {
-    background-color: var(--genz-bg) !important;
+    background-color: #FFFFFF !important;
     backdrop-filter: blur(8px);
     box-shadow: none !important;
     border-bottom: none !important;
     position: sticky !important;
     top: 0;
     z-index: 9;
+    padding: 16px;
 }
 
 /* --------------------------------------
