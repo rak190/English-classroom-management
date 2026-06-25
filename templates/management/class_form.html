@@ -22,6 +22,22 @@
                 <form method="post">
                     {% csrf_token %}
                     
+                    {% if form.errors %}
+                        <div class="alert alert-danger mb-4" style="border-radius: 12px;">
+                            Please correct the errors below:
+                            <ul class="mb-0 mt-2">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
                     {% if form.non_field_errors %}
                     <div class="alert alert-danger" style="border-radius: 12px;">
                         {% for error in form.non_field_errors %}

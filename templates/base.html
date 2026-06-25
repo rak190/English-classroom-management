@@ -156,13 +156,28 @@
                             <h3 class="mb-0 fw-bold d-none d-md-block">{% block header_title %}Dashboard{% endblock %}</h3>
                         </div>
 
-                        <div class="d-flex align-items-center">
-                            <div class="search-bar">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="search-bar d-none d-md-flex">
                                 <i class="bx bx-search text-muted fs-5"></i>
                                 <input type="text" placeholder="Search">
                             </div>
-                            <div class="mic-icon">
+                            <div class="mic-icon d-none d-md-flex">
                                 <i class="bx bx-microphone fs-5"></i>
+                            </div>
+                            
+                            <!-- Profile & Notifications -->
+                            <div class="bell-icon ms-md-2" style="width: 36px; height: 36px; font-size: 18px;">
+                                <i class="bx bx-bell"></i>
+                                <span class="bell-dot" style="top: 8px; right: 8px; width: 6px; height: 6px;"></span>
+                            </div>
+                            <div class="d-flex align-items-center ms-2">
+                                <div class="profile-avatar mb-0 me-2" style="width: 40px; height: 40px; font-size: 16px;">
+                                    <img src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=FFB800&color=FFFFFF" alt="" class="w-100 h-100 rounded-circle">
+                                </div>
+                                <div class="profile-info d-none d-md-block">
+                                    <h6 class="profile-name mb-0" style="font-size: 14px;">{{ request.user.first_name|default:request.user.username }}</h6>
+                                    <p class="profile-role mb-0" style="font-size: 11px;">Teacher</p>
+                                </div>
                             </div>
                         </div>
                     </nav>
@@ -174,25 +189,9 @@
                     </div>
                 </div>
 
-                <!-- Right Sidebar (Profile, Calendar, Events) -->
-                <aside class="right-sidebar">
-                    <div class="profile-section">
-                        <div class="profile-avatar">
-                            <img src="https://ui-avatars.com/api/?name=Brandon+Septimus&background=FFB800&color=FFFFFF" alt="" class="w-100 h-100 rounded-circle">
-                        </div>
-                        <div class="profile-info">
-                            <h6 class="profile-name">Brandon Septimus</h6>
-                            <p class="profile-role">Admin</p>
-                        </div>
-                        <div class="bell-icon">
-                            <i class="bx bx-bell"></i>
-                            <span class="bell-dot"></span>
-                        </div>
-                    </div>
-
-                    {% block right_sidebar %}
-                    {% endblock %}
-                </aside>
+                <!-- Right Sidebar is only shown if explicitly injected by a view -->
+                {% block right_sidebar_container %}
+                {% endblock %}
 
             </div>
         </div>

@@ -26,9 +26,8 @@ body {
     background-color: #E2E8F0 !important; 
     color: var(--genz-text-main);
     font-family: 'Google Sans', 'Kantumruy Pro', sans-serif !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: block;
+    overflow: hidden;
     min-height: 100vh;
     padding: 0;
     margin: 0;
@@ -53,12 +52,10 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
 }
 
 @media (min-width: 992px) {
-    body {
-        padding: 12px;
-    }
     .app-frame {
-        max-width: 1920px;
+        width: calc(100vw - 24px);
         height: calc(100vh - 24px);
+        margin: 12px auto;
         border-radius: var(--genz-radius);
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     }
@@ -111,7 +108,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
 .layout-page {
     flex-grow: 1;
     background: var(--genz-bg) !important;
-    height: 100%;
+    height: calc(100% - 24px);
     display: flex;
     flex-direction: column;
     border-radius: 40px; /* Big rounded corners as seen in reference */
@@ -388,6 +385,45 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
     border-bottom: 1px solid var(--genz-border);
     padding: 16px !important;
     color: var(--genz-text-main);
+}
+
+/* Modern Separated Cards Table */
+.table-modern {
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    width: 100%;
+}
+.table-modern th {
+    border: none !important;
+    background: transparent !important;
+    padding: 12px 24px !important;
+    color: var(--genz-text-muted);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.table-modern tbody tr {
+    background: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    border-radius: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.table-modern tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+.table-modern td {
+    border: none !important;
+    padding: 20px 24px !important;
+    vertical-align: middle;
+}
+.table-modern td:first-child {
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+.table-modern td:last-child {
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
 }
 
 /* --------------------------------------
