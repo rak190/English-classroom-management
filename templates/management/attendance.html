@@ -1,102 +1,55 @@
 {% extends 'base.html' %}
-{% load widget_tweaks %}
-
-{% block title %}Attendance - ECMS{% endblock %}
-{% block header_title %}Attendance Tracking{% endblock %}
+{% block title %}Individual Attendance - ECMS{% endblock %}
+{% block header_title %}Attendance Log{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold py-3 mb-0"><span class="text-muted fw-light">Management /</span> Attendance</h4>
-    <a href="{% url 'management:bulk_attendance_view' %}" class="btn btn-primary btn-lg shadow-sm">
-        <i class="bx bx-list-check me-1"></i> Take Attendance for Whole Class
+    <h4 class="fw-bold mb-0 text-dark">Recent Attendance Logs</h4>
+    <a href="{% url 'management:bulk_attendance_view' %}" class="btn btn-primary" style="border-radius: 12px; padding: 10px 20px;">
+        <i class="bx bx-list-check me-1"></i> Take Bulk Attendance
     </a>
 </div>
 
-<div class="row">
-    <!-- Form -->
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <h5 class="card-header border-bottom mb-3"><i class="bx bx-calendar-check text-primary me-2"></i> Mark Attendance</h5>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label" for="id_date">Date</label>
-                        {% render_field form.date class="form-control" id="id_date" %}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="id_course">Class</label>
-                        {% render_field form.course class="form-select" id="id_course" %}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="id_student">Student</label>
-                        {% render_field form.student class="form-select" id="id_student" %}
-                    </div>
-                    
-                    <div class="mb-4">
-                        <small class="text-light fw-semibold d-block mb-2">Status</small>
-                        <div class="form-check form-check-inline mt-3">
-                            <input class="form-check-input" type="radio" name="status" id="id_status_0" value="Present" required>
-                            <label class="form-check-label text-success" for="id_status_0">Present</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="status" id="id_status_1" value="Absent">
-                            <label class="form-check-label text-danger" for="id_status_1">Absent</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="status" id="id_status_2" value="Late">
-                            <label class="form-check-label text-warning" for="id_status_2">Late</label>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100">Submit Attendance</button>
-                </form>
-            </div>
-        </div>
+<div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
+    <div class="card-header bg-white border-bottom p-4">
+        <h5 class="mb-0 fw-bold text-dark">History</h5>
     </div>
-    
-    <!-- Table -->
-    <div class="col-md-8 mb-4">
-        <div class="card h-100">
-            <h5 class="card-header">Recent Attendance Records</h5>
-            <div class="table-responsive text-nowrap">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Class</th>
-                            <th>Student</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                        {% for record in attendances %}
-                        <tr>
-                            <td><strong>{{ record.date|date:"M d, Y" }}</strong></td>
-                            <td>{{ record.course.class_name }}</td>
-                            <td>{{ record.student.name }}</td>
-                            <td>
-                                {% if record.status == 'Present' %}
-                                    <span class="badge bg-label-success"><i class="bx bx-check-circle me-1"></i> Present</span>
-                                {% elif record.status == 'Absent' %}
-                                    <span class="badge bg-label-danger"><i class="bx bx-x-circle me-1"></i> Absent</span>
-                                {% else %}
-                                    <span class="badge bg-label-warning"><i class="bx bx-time-five me-1"></i> Late</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">
-                                <i class="bx bx-clipboard fs-1 d-block mb-3"></i>
-                                No attendance records found.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover mb-0">
+            <thead style="background-color: #F8FAFC;">
+                <tr>
+                    <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Date</th>
+                    <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Student</th>
+                    <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Class</th>
+                    <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Status</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+                {% for record in attendance_records %}
+                <tr style="transition: all 0.2s ease;">
+                    <td style="padding: 16px 24px !important;"><i class="bx bx-calendar text-muted me-1"></i> {{ record.date|date:"M d, Y" }}</td>
+                    <td style="padding: 16px 24px !important; font-weight: 600;">{{ record.student.name }}</td>
+                    <td style="padding: 16px 24px !important; color: #64748B;">{{ record.course.class_name }}</td>
+                    <td style="padding: 16px 24px !important;">
+                        {% if record.status == 'Present' %}
+                            <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class="bx bx-check me-1"></i> Present</span>
+                        {% elif record.status == 'Absent' %}
+                            <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class="bx bx-x me-1"></i> Absent</span>
+                        {% else %}
+                            <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class="bx bx-time-five me-1"></i> Late</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-5 text-muted">
+                        <i class="bx bx-calendar-check" style="font-size: 40px; color: #CBD5E1; margin-bottom: 10px;"></i><br>
+                        No attendance records found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

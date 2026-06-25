@@ -5,59 +5,74 @@
 {% block extra_css %}
 <style>
     .ai-card {
-        border-radius: 20px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
+        border-radius: var(--genz-radius);
+        transition: all 0.3s ease;
+        border: none;
+        background: var(--genz-card-bg);
+        box-shadow: var(--genz-shadow);
         overflow: hidden;
         position: relative;
+        padding: 30px;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     .ai-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(99, 102, 241, 0.1);
-        border-color: rgba(99, 102, 241, 0.3);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
     }
     .icon-wrapper {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
-        margin-bottom: 1rem;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        color: white;
     }
     .bg-gradient-primary {
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-        color: white;
+        background: linear-gradient(135deg, var(--genz-primary) 0%, #4F8CFF 100%);
     }
     .bg-gradient-success {
         background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-        color: white;
     }
     .bg-gradient-warning {
-        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-        color: white;
+        background: linear-gradient(135deg, var(--genz-accent) 0%, #FDE047 100%);
+    }
+    .ai-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--genz-text-main);
+        margin-bottom: 10px;
+    }
+    .ai-desc {
+        color: var(--genz-text-muted);
+        font-size: 14px;
+        line-height: 1.5;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<h4 class="fw-bold py-3 mb-4">
-    <span class="text-muted fw-light">Generative AI /</span> Dashboard
-</h4>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0 text-dark">Select a Tool</h4>
+    <span class="badge bg-white text-muted" style="border: 1px solid var(--genz-border);">Powered by Gemini</span>
+</div>
 
 <div class="row">
     <!-- Worksheet Generator -->
     <div class="col-md-4 mb-4">
         <a href="{% url 'management:ai_worksheet' %}" class="text-decoration-none">
-            <div class="card ai-card h-100 p-4">
-                <div class="icon-wrapper bg-gradient-primary shadow-sm">
+            <div class="ai-card">
+                <div class="icon-wrapper bg-gradient-primary">
                     <i class="bx bx-file"></i>
                 </div>
-                <h5 class="fw-bold text-dark mb-2">Worksheet Generator</h5>
-                <p class="text-muted mb-0">Instantly generate grammar or vocabulary worksheets tailored to your students' level, complete with answer keys.</p>
+                <h5 class="ai-title">Worksheet Generator</h5>
+                <p class="ai-desc">Instantly generate grammar or vocabulary worksheets tailored to your students' level, complete with answer keys.</p>
             </div>
         </a>
     </div>
@@ -65,12 +80,12 @@
     <!-- Lesson Plan Generator -->
     <div class="col-md-4 mb-4">
         <a href="{% url 'management:ai_lesson_plan' %}" class="text-decoration-none">
-            <div class="card ai-card h-100 p-4">
-                <div class="icon-wrapper bg-gradient-success shadow-sm">
+            <div class="ai-card">
+                <div class="icon-wrapper bg-gradient-success">
                     <i class="bx bx-chalkboard"></i>
                 </div>
-                <h5 class="fw-bold text-dark mb-2">Lesson Plan Generator</h5>
-                <p class="text-muted mb-0">Create detailed, timed lesson plans with clear objectives, presentation, and practice stages.</p>
+                <h5 class="ai-title">Lesson Plan Generator</h5>
+                <p class="ai-desc">Create detailed, timed lesson plans with clear objectives, presentation, and practice stages.</p>
             </div>
         </a>
     </div>
@@ -78,12 +93,12 @@
     <!-- Test Generator -->
     <div class="col-md-4 mb-4">
         <a href="{% url 'management:ai_test' %}" class="text-decoration-none">
-            <div class="card ai-card h-100 p-4">
-                <div class="icon-wrapper bg-gradient-warning shadow-sm">
-                    <i class="bx bx-task"></i>
+            <div class="ai-card">
+                <div class="icon-wrapper bg-gradient-warning">
+                    <i class="bx bx-task text-dark"></i>
                 </div>
-                <h5 class="fw-bold text-dark mb-2">Test Generator</h5>
-                <p class="text-muted mb-0">Automatically construct monthly or semester tests covering multiple topics, including a full marking scheme.</p>
+                <h5 class="ai-title">Test Generator</h5>
+                <p class="ai-desc">Automatically construct monthly or semester tests covering multiple topics, including a full marking scheme.</p>
             </div>
         </a>
     </div>

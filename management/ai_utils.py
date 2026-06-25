@@ -1,22 +1,18 @@
 import os
-import google.generativeai as genai
+from google import genai
 from django.conf import settings
 
-# Configure the API key using the environment variable
-api_key = os.getenv("GEMINI_API_KEY")
-if api_key:
-    genai.configure(api_key=api_key)
-
 # We use the recommended gemini-1.5-flash for general fast text generation
-def get_model():
-    # Only return the model if API key is configured, else return None
-    if not os.getenv("GEMINI_API_KEY"):
+def get_client():
+    # Only return the client if API key is configured, else return None
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
         return None
-    return genai.GenerativeModel('gemini-1.5-flash')
+    return genai.Client(api_key=api_key)
 
 def generate_worksheet(topic, level, questions_count):
-    model = get_model()
-    if not model:
+    client = get_client()
+    if not client:
         return "Error: GEMINI_API_KEY is not configured in the .env file."
         
     prompt = f"""
@@ -32,14 +28,17 @@ def generate_worksheet(topic, level, questions_count):
     """
     
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=prompt
+        )
         return response.text
     except Exception as e:
         return f"An error occurred while generating the worksheet: {str(e)}"
 
 def generate_lesson_plan(topic, level, duration):
-    model = get_model()
-    if not model:
+    client = get_client()
+    if not client:
         return "Error: GEMINI_API_KEY is not configured in the .env file."
         
     prompt = f"""
@@ -62,14 +61,17 @@ def generate_lesson_plan(topic, level, duration):
     """
     
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=prompt
+        )
         return response.text
     except Exception as e:
         return f"An error occurred while generating the lesson plan: {str(e)}"
 
 def generate_test(test_type, topics, level):
-    model = get_model()
-    if not model:
+    client = get_client()
+    if not client:
         return "Error: GEMINI_API_KEY is not configured in the .env file."
         
     prompt = f"""
@@ -87,7 +89,10 @@ def generate_test(test_type, topics, level):
     """
     
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=prompt
+        )
         return response.text
     except Exception as e:
         return f"An error occurred while generating the test: {str(e)}"

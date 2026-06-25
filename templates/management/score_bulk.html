@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}Bulk Score Entry - ECMS{% endblock %}
+{% block header_title %}Grade Assessment{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0 text-dark">
+        <a href="{% url 'management:score_view' %}" class="text-muted text-decoration-none"><i class='bx bx-arrow-back me-2'></i>Scores</a>
+    </h4>
+</div>
+
+<div class="row">
+    <!-- Selection Panel -->
+    <div class="col-md-12 mb-4">
+        <div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
+            <div class="card-body p-4">
+                <form method="post" class="row gx-4 gy-3 align-items-end">
+                    {% csrf_token %}
+                    <div class="col-md-4">
+                        <label class="form-label text-muted fw-bold">Select Class</label>
+                        <select class="form-select" id="courseSelect" name="course" required style="font-size: 15px;">
+                            <option value="">Choose...</option>
+                            {% for c in courses %}
+                            <option value="{{ c.id }}" {% if selected_course and selected_course.id == c.id %}selected{% endif %}>{{ c.class_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted fw-bold">Assessment Type</label>
+                        <select class="form-select" id="scoreTypeSelect" name="score_type" required style="font-size: 15px;">
+                            <option value="Quiz">Quiz</option>
+                            <option value="Midterm Exam">Midterm Exam</option>
+                            <option value="Final Exam">Final Exam</option>
+                            <option value="Homework">Homework</option>
+                            <option value="Project">Project</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100" style="border-radius: 12px; padding: 10px 0;">Load Students</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scoring Grid -->
+    {% if selected_course %}
+    <div class="col-md-12">
+        <div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
+            <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark">Enter Scores for {{ selected_course.class_name }}</h5>
+                <span class="badge" style="background: rgba(30, 101, 255, 0.1); color: var(--genz-primary); padding: 8px 16px; border-radius: 8px;">Grade Mode Active</span>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="course" value="{{ selected_course.id }}">
+                <input type="hidden" name="score_type" id="hiddenScoreType" value="Quiz">
+                <input type="hidden" name="save_scores" value="1">
+                
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover mb-0">
+                        <thead style="background-color: #F8FAFC;">
+                            <tr>
+                                <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">ID</th>
+                                <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Student Name</th>
+                                <th class="text-uppercase text-center" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important; width: 30%;">Score (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            {% for student in students %}
+                            <tr>
+                                <td style="padding: 12px 24px !important;"><strong>{{ student.student_id }}</strong></td>
+                                <td style="padding: 12px 24px !important; font-weight: 600;">{{ student.name }}</td>
+                                <td style="padding: 12px 24px !important;" class="text-center">
+                                    <input type="hidden" name="student_ids" value="{{ student.id }}">
+                                    <input type="number" step="0.1" min="0" max="100" class="form-control text-center mx-auto" name="score_{{ student.id }}" style="max-width: 120px; font-weight: 600; font-size: 16px; border-radius: 8px;" placeholder="--">
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-5 text-muted">
+                                    <i class="bx bx-group" style="font-size: 40px; color: #CBD5E1; margin-bottom: 10px;"></i><br>
+                                    No students are currently enrolled in this class.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if students %}
+                <div class="card-footer bg-white border-top p-4 d-flex justify-content-end align-items-center">
+                    <span class="text-muted me-4" style="font-size: 13px;"><i class='bx bx-info-circle me-1'></i>Tip: Use Tab to quickly move to the next student.</span>
+                    <button type="submit" class="btn btn-success px-4 py-2" style="border-radius: 12px; background-color: #10B981; border: none;">
+                        <i class="bx bx-save me-1"></i> Save All Scores
+                    </button>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Sync the hidden score_type input with the visible select when the page loads or changes
+    document.addEventListener("DOMContentLoaded", function() {
+        const select = document.getElementById("scoreTypeSelect");
+        const hidden = document.getElementById("hiddenScoreType");
+        if(hidden && select) {
+            // Restore selection if it was submitted
+            const urlParams = new URLSearchParams(window.location.search); // won't work well for POST, let's just use the selected value from DOM
+            
+            select.addEventListener("change", function() {
+                hidden.value = this.value;
+            });
+            // Initial sync
+            hidden.value = select.value;
+        }
+    });
+</script>
+{% endblock %}

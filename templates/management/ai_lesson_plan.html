@@ -1,30 +1,36 @@
 {% extends 'base.html' %}
 {% block title %}AI Lesson Plan Generator - ECMS{% endblock %}
-{% block header_title %}Generative AI Lab{% endblock %}
+{% block header_title %}Lesson Plan Generator{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold py-3 mb-4">
-    <span class="text-muted fw-light"><a href="{% url 'management:ai_dashboard' %}">Generative AI</a> /</span> Lesson Plan Generator
-</h4>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0 text-dark">
+        <a href="{% url 'management:ai_dashboard' %}" class="text-muted text-decoration-none"><i class='bx bx-arrow-back me-2'></i>AI Tools</a>
+    </h4>
+</div>
 
 <div class="row">
+    <!-- Parameters Form -->
     <div class="col-md-4 mb-4">
-        <div class="card shadow-sm" style="border-radius: 16px;">
-            <div class="card-header bg-label-success border-bottom pb-3" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
-                <h5 class="card-title mb-0 text-success d-flex align-items-center">
-                    <i class="bx bx-chalkboard bx-sm me-2"></i> Plan Parameters
+        <div class="card h-100 border-0" style="box-shadow: var(--genz-shadow);">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h5 class="card-title-small text-dark mb-0 d-flex align-items-center">
+                    <div class="item-icon-square me-3" style="background: rgba(16, 185, 129, 0.1); color: #10B981; width: 36px; height: 36px; font-size: 18px;">
+                        <i class="bx bx-chalkboard"></i>
+                    </div>
+                    Plan Parameters
                 </h5>
             </div>
             <div class="card-body pt-4">
                 <form method="POST">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Topic</label>
-                        <input type="text" class="form-control" name="topic" placeholder="e.g. Has to / Have to" required>
+                    <div class="mb-4">
+                        <label class="form-label text-muted">Topic</label>
+                        <input type="text" class="form-control" name="topic" placeholder="e.g. Has to / Have to" required style="font-size: 15px;">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Student Level</label>
-                        <select class="form-select" name="level" required>
+                    <div class="mb-4">
+                        <label class="form-label text-muted">Student Level</label>
+                        <select class="form-select" name="level" required style="font-size: 15px;">
                             <option value="A1 (Beginner)">A1 (Beginner)</option>
                             <option value="A2 (Elementary)">A2 (Elementary)</option>
                             <option value="B1 (Intermediate)">B1 (Intermediate)</option>
@@ -32,11 +38,11 @@
                             <option value="C1 (Advanced)">C1 (Advanced)</option>
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Class Duration (minutes)</label>
-                        <input type="number" class="form-control" name="duration" min="15" max="180" value="90" required>
+                    <div class="mb-5">
+                        <label class="form-label text-muted">Class Duration (minutes)</label>
+                        <input type="number" class="form-control" name="duration" min="15" max="180" value="90" required style="font-size: 15px;">
                     </div>
-                    <button type="submit" class="btn btn-success w-100 fw-bold">
+                    <button type="submit" class="btn btn-primary w-100 py-3" style="background-color: #10B981 !important; border-color: #10B981 !important; font-size: 15px; border-radius: 14px;">
                         <i class="bx bx-magic-wand me-2"></i> Generate Lesson Plan
                     </button>
                 </form>
@@ -44,12 +50,13 @@
         </div>
     </div>
 
+    <!-- AI Output -->
     <div class="col-md-8 mb-4">
-        <div class="card shadow-sm h-100" style="border-radius: 16px;">
-            <div class="card-header d-flex justify-content-between align-items-center border-bottom pb-3">
-                <h5 class="card-title mb-0 fw-bold">AI Output</h5>
+        <div class="card h-100 border-0" style="box-shadow: var(--genz-shadow);">
+            <div class="card-header bg-white border-bottom pt-4 pb-3 d-flex justify-content-between align-items-center">
+                <h5 class="card-title-small text-dark mb-0">AI Output</h5>
                 {% if result_html %}
-                <button class="btn btn-sm btn-outline-secondary" onclick="window.print()">
+                <button class="btn btn-outline-primary btn-sm px-3 py-2" onclick="window.print()" style="border-radius: 10px;">
                     <i class="bx bx-printer me-1"></i> Print
                 </button>
                 {% endif %}
@@ -60,10 +67,13 @@
                         {{ result_html|safe }}
                     </div>
                 {% else %}
-                    <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
-                        <i class="bx bx-bot bx-lg mb-3 opacity-50"></i>
-                        <p class="mb-0">Fill out the parameters and click Generate.</p>
-                        <p class="small opacity-50">Powered by Google Gemini 1.5</p>
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 400px;">
+                        <div style="width: 80px; height: 80px; background: #F8FAFC; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                            <i class="bx bx-bot" style="font-size: 40px; color: #CBD5E1;"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-2">Ready to generate</h6>
+                        <p class="mb-0" style="font-size: 14px;">Fill out the parameters and click Generate.</p>
+                        <p class="mt-3" style="font-size: 12px; color: #94A3B8;">Powered by Google Gemini</p>
                     </div>
                 {% endif %}
             </div>
@@ -79,14 +89,16 @@
         margin-bottom: 1rem;
     }
     .markdown-body p, .markdown-body li {
-        font-size: 1.05rem;
+        font-size: 15px;
         line-height: 1.6;
+        color: #334155;
     }
     @media print {
-        .layout-menu, .layout-navbar, .col-md-4, .card-header { display: none !important; }
+        .layout-menu, .layout-navbar, .col-md-4, .card-header, .right-sidebar { display: none !important; }
         .col-md-8 { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; }
         .card { border: none !important; box-shadow: none !important; }
         .card-body { max-height: none !important; overflow: visible !important; }
+        .app-frame, .layout-page { border-radius: 0 !important; background: white !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
     }
 </style>
 {% endblock %}

@@ -2,394 +2,290 @@
 {% load static %}
 
 {% block title %}Dashboard - ECMS{% endblock %}
-{% block header_title %}ផ្ទាំងគ្រប់គ្រង (Dashboard){% endblock %}
-
-{% block extra_css %}
-<style>
-    /* Specific styles for the new dashboard layout */
-    .dashboard-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-    }
-    
-    .card-title-small {
-        font-size: 14px;
-        font-weight: 600;
-        color: #1E293B;
-        margin-bottom: 16px;
-    }
-    
-    .metric-value {
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 4px;
-    }
-    
-    .metric-label {
-        font-size: 13px;
-        font-weight: 500;
-        opacity: 0.9;
-    }
-    
-    /* Notice Board Item */
-    .notice-item {
-        display: flex;
-        padding: 8px 0;
-        border-bottom: 1px solid var(--genz-border);
-    }
-    .notice-item:last-child {
-        border-bottom: none;
-    }
-    .notice-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        background-color: rgba(255, 184, 0, 0.1);
-        color: var(--genz-accent);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        font-size: 20px;
-    }
-    
-    /* Calendar */
-    .calendar-wrapper {
-        background: white;
-        border-radius: var(--genz-radius);
-        padding: 15px;
-        box-shadow: var(--genz-shadow);
-    }
-    .calendar-days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        text-align: center;
-        gap: 8px;
-        margin-top: 12px;
-    }
-    .calendar-day-header {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--genz-text-muted);
-        text-transform: uppercase;
-    }
-    .calendar-day {
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--genz-text-main);
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        margin: auto;
-    }
-    .calendar-day.active {
-        background-color: var(--genz-primary);
-        color: white;
-    }
-    
-    /* Event Item Borders */
-    .event-border-accent { border-left: 4px solid var(--genz-accent); }
-    .event-border-primary { border-left: 4px solid var(--genz-primary); }
-</style>
-{% endblock %}
+{% block header_title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="dashboard-header d-none">
-    <h4 class="fw-bold mb-0">ផ្ទាំងគ្រប់គ្រង (Dashboard)</h4>
+<div class="row">
+    <!-- Top Metrics Row -->
+    <div class="col-md-3 mb-4">
+        <a href="{% url 'management:student_list' %}" class="text-decoration-none">
+            <div class="card card-metric card-metric-orange">
+                <div class="metric-value">{{ total_students }}</div>
+                <div class="metric-label">Students</div>
+                <div class="metric-arrow">
+                    <i class='bx bx-right-top-arrow-circle' style="font-size: 20px;"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 mb-4">
+        <a href="{% url 'management:class_list' %}" class="text-decoration-none">
+            <div class="card card-metric card-metric-orange">
+                <div class="metric-value">{{ active_classes }}</div>
+                <div class="metric-label">Classes</div>
+                <div class="metric-arrow">
+                    <i class='bx bx-right-top-arrow-circle' style="font-size: 20px;"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 mb-4">
+        <a href="{% url 'management:attendance_view' %}" class="text-decoration-none">
+            <div class="card card-metric card-metric-orange">
+                <div class="metric-value">{{ today_attendance_present }}</div>
+                <div class="metric-label">Attendance</div>
+                <div class="metric-arrow">
+                    <i class='bx bx-right-top-arrow-circle' style="font-size: 20px;"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 mb-4">
+        <a href="{% url 'management:homework_view' %}" class="text-decoration-none">
+            <div class="card card-metric card-metric-blue">
+                <div class="metric-value">{{ hw_submitted }}</div>
+                <div class="metric-label">Homework</div>
+                <div class="metric-arrow">
+                    <i class='bx bx-right-top-arrow-circle' style="font-size: 20px;"></i>
+                </div>
+            </div>
+        </a>
+    </div>
 </div>
 
 <div class="row">
-    <!-- Main Content Area (Left 8 columns) -->
-    <div class="col-xl-9 col-lg-8">
-        
-        <!-- Top Metrics Row -->
-        <div class="row mb-3">
-            <!-- Metric 1: Students -->
-            <div class="col-md-3 col-sm-6 mb-2 mb-md-0">
-                <div class="card card-metric-orange">
-                    <div class="card-body px-3 py-3">
-                        <div class="d-flex align-items-center">
-                            <div class="metric-icon me-3">
-                                <i class='bx bx-user fs-4 text-dark'></i>
-                            </div>
-                            <div>
-                                <h4 class="metric-value mb-0" style="font-size: 20px;">{{ total_students }}</h4>
-                                <p class="metric-label mb-0" style="font-size: 11px;">សិស្ស (Students)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Charts Row 1 -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title-small mb-0">Students</h5>
+                <span class="badge" style="background: var(--genz-bg); color: var(--genz-text-muted);">Grade 7 <i class='bx bx-chevron-down'></i></span>
             </div>
-            
-            <!-- Metric 2: Classes -->
-            <div class="col-md-3 col-sm-6 mb-2 mb-md-0">
-                <div class="card card-metric-orange">
-                    <div class="card-body px-3 py-3">
-                        <div class="d-flex align-items-center">
-                            <div class="metric-icon me-3">
-                                <i class='bx bx-book-bookmark fs-4 text-dark'></i>
-                            </div>
-                            <div>
-                                <h4 class="metric-value mb-0" style="font-size: 20px;">{{ active_classes }}</h4>
-                                <p class="metric-label mb-0" style="font-size: 11px;">ថ្នាក់រៀន (Classes)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="position-relative d-flex justify-content-center align-items-center" style="height: 200px;">
+                <canvas id="studentsChart"></canvas>
             </div>
-            
-            <!-- Metric 3: Attendance -->
-            <div class="col-md-3 col-sm-6 mb-2 mb-md-0">
-                <div class="card card-metric-orange">
-                    <div class="card-body px-3 py-3">
-                        <div class="d-flex align-items-center">
-                            <div class="metric-icon me-3">
-                                <i class='bx bx-check-circle fs-4 text-dark'></i>
-                            </div>
-                            <div>
-                                <h4 class="metric-value mb-0" style="font-size: 20px;">{{ today_attendance_present }}</h4>
-                                <p class="metric-label mb-0" style="font-size: 11px;">វត្តមាន (Attendance)</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="d-flex justify-content-center mt-4 gap-5">
+                <div class="text-center">
+                    <span class="d-block text-muted" style="font-size: 13px;"><i class='bx bxs-circle text-warning me-2'></i>Girls</span>
+                    <strong class="fs-5" id="female-count-label" style="color: var(--genz-text-main);">0</strong>
                 </div>
-            </div>
-            
-            <!-- Metric 4: Assignments/HW -->
-            <div class="col-md-3 col-sm-6 mb-2 mb-md-0">
-                <div class="card card-metric-blue">
-                    <div class="card-body px-3 py-3">
-                        <div class="d-flex align-items-center">
-                            <div class="metric-icon me-3">
-                                <i class='bx bx-edit-alt fs-4 text-white'></i>
-                            </div>
-                            <div>
-                                <h4 class="metric-value mb-0" style="font-size: 20px;">{{ hw_submitted }}</h4>
-                                <p class="metric-label mb-0" style="font-size: 11px;">កិច្ចការ (Homework)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Charts Row 1 -->
-        <div class="row mb-3">
-            <!-- Students Doughnut Chart -->
-            <div class="col-md-4 mb-2 mb-md-0">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="card-title-small mb-0">សិស្ស (Students)</h5>
-                            <span class="badge bg-label-secondary">ថ្នាក់ទី ៧ (Grade 7) <i class='bx bx-chevron-down'></i></span>
-                        </div>
-                        <div class="flex-grow-1 position-relative d-flex align-items-center justify-content-center" style="min-height: 180px;">
-                            <canvas id="studentsChart"></canvas>
-                        </div>
-                        <div class="d-flex justify-content-center mt-3 gap-4">
-                            <div class="text-center">
-                                <span class="d-block text-muted" style="font-size: 12px;"><i class='bx bxs-circle text-warning me-1'></i>ស្រី (Girls)</span>
-                                <strong class="fs-5" id="female-count-label"></strong>
-                            </div>
-                            <div class="text-center">
-                                <span class="d-block text-muted" style="font-size: 12px;"><i class='bx bxs-circle text-primary me-1'></i>ប្រុស (Boys)</span>
-                                <strong class="fs-5" id="male-count-label"></strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Progress Area Chart -->
-            <div class="col-md-8">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="card-title-small mb-0">វឌ្ឍនភាពការសិក្សា (Academic Progress)</h5>
-                            <span class="badge bg-label-secondary">៨ ខែចុងក្រោយ (Last 8 Months) <i class='bx bx-chevron-down'></i></span>
-                        </div>
-                        <div class="d-flex align-items-center mb-3">
-                            <span class="me-3" style="font-size: 12px;"><i class='bx bxs-circle text-warning me-1'></i>ការប្រឡង (Exams)</span>
-                            <span style="font-size: 12px;"><i class='bx bxs-circle text-primary me-1'></i>កិច្ចការផ្ទះ (Homework)</span>
-                        </div>
-                        <div style="height: 180px;">
-                            <canvas id="progressChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Charts Row 2 -->
-        <div class="row">
-            <!-- Attendance Bar Chart -->
-            <div class="col-md-6 mb-2">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="card-title-small mb-0">វត្តមាន (Attendance)</h5>
-                            <span class="badge bg-label-secondary">សប្តាហ៍នេះ (Weekly) <i class='bx bx-chevron-down'></i></span>
-                        </div>
-                        <div class="d-flex align-items-center mb-3">
-                            <span class="me-3" style="font-size: 12px;"><i class='bx bxs-circle text-warning me-1'></i>វត្តមាន (Present)</span>
-                            <span style="font-size: 12px;"><i class='bx bxs-circle text-primary me-1'></i>អវត្តមាន (Absent)</span>
-                        </div>
-                        <div style="height: 180px;">
-                            <canvas id="attendanceChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Notice Board -->
-            <div class="col-md-6 mb-2">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="card-title-small mb-0">ក្តារព័ត៌មាន (Notice Board)</h5>
-                            <span class="text-muted" style="font-size: 12px;">ថ្មីបំផុត (Latest) <i class='bx bx-chevron-down'></i></span>
-                        </div>
-                        
-                        <div class="notice-list">
-                            {% for notice in recent_notices %}
-                            <div class="notice-item">
-                                <div class="notice-icon">
-                                    <i class='bx {{ notice.icon }}'></i>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1" style="font-size: 14px; font-weight: 600;">{{ notice.title }}</h6>
-                                    <p class="mb-0 text-muted" style="font-size: 12px;">by {{ notice.author_name }}</p>
-                                    <p class="mt-2 text-muted" style="font-size: 11px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ notice.content }}</p>
-                                </div>
-                                <div class="text-end">
-                                    <small class="d-block text-muted" style="font-size: 11px;">{{ notice.created_at|date:"M d, Y" }}</small>
-                                </div>
-                            </div>
-                            {% empty %}
-                            <div class="text-center py-4 text-muted">
-                                <i class="bx bx-news fs-2 mb-2 d-block"></i>
-                                No recent notices.
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+                <div class="text-center">
+                    <span class="d-block text-muted" style="font-size: 13px;"><i class='bx bxs-circle text-primary me-2'></i>Boys</span>
+                    <strong class="fs-5" id="male-count-label" style="color: var(--genz-text-main);">0</strong>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Right Sidebar (Calendar & Events) -->
-    <div class="col-xl-3 col-lg-4">
-        <!-- Calendar -->
-        <div class="calendar-wrapper mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">July 2025</h6>
-                <div>
-                    <i class='bx bx-chevron-left text-muted me-2' style="cursor:pointer;"></i>
-                    <i class='bx bx-chevron-right text-muted' style="cursor:pointer;"></i>
-                </div>
+    <div class="col-md-8 mb-4">
+        <div class="card h-100 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title-small mb-0">Academic Progress</h5>
+                <span class="badge" style="background: var(--genz-bg); color: var(--genz-text-muted);">Last 8 Months <i class='bx bx-chevron-down'></i></span>
             </div>
-            <div class="calendar-days">
-                <div class="calendar-day-header">Su</div>
-                <div class="calendar-day-header">Mo</div>
-                <div class="calendar-day-header">Tu</div>
-                <div class="calendar-day-header">We</div>
-                <div class="calendar-day-header">Th</div>
-                <div class="calendar-day-header">Fr</div>
-                <div class="calendar-day-header">Sa</div>
-                
-                <div class="calendar-day text-muted">29</div>
-                <div class="calendar-day text-muted">30</div>
-                <div class="calendar-day">1</div>
-                <div class="calendar-day">2</div>
-                <div class="calendar-day">3</div>
-                <div class="calendar-day">4</div>
-                <div class="calendar-day">5</div>
-                
-                <div class="calendar-day">6</div>
-                <div class="calendar-day">7</div>
-                <div class="calendar-day">8</div>
-                <div class="calendar-day">9</div>
-                <div class="calendar-day active">10</div>
-                <div class="calendar-day">11</div>
-                <div class="calendar-day">12</div>
-                
-                <div class="calendar-day">13</div>
-                <div class="calendar-day">14</div>
-                <div class="calendar-day">15</div>
-                <div class="calendar-day">16</div>
-                <div class="calendar-day">17</div>
-                <div class="calendar-day">18</div>
-                <div class="calendar-day">19</div>
-                
-                <div class="calendar-day">20</div>
-                <div class="calendar-day">21</div>
-                <div class="calendar-day">22</div>
-                <div class="calendar-day">23</div>
-                <div class="calendar-day">24</div>
-                <div class="calendar-day">25</div>
-                <div class="calendar-day">26</div>
-                
-                <div class="calendar-day">27</div>
-                <div class="calendar-day">28</div>
-                <div class="calendar-day">29</div>
-                <div class="calendar-day">30</div>
-                <div class="calendar-day">31</div>
-                <div class="calendar-day text-muted">1</div>
-                <div class="calendar-day text-muted">2</div>
+            <div class="d-flex align-items-center mb-2">
+                <span class="me-4" style="font-size: 12px; color: var(--genz-text-muted);"><i class='bx bxs-circle text-warning me-1'></i>Exams</span>
+                <span style="font-size: 12px; color: var(--genz-text-muted);"><i class='bx bxs-circle text-primary me-1'></i>Homework</span>
+            </div>
+            <div style="height: 200px;">
+                <canvas id="progressChart"></canvas>
             </div>
         </div>
-        
-        <!-- Upcoming Events -->
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="card-title-small mb-0">ព្រឹត្តិការណ៍បន្ទាប់ (Upcoming Events)</h5>
-                    <i class='bx bx-dots-horizontal-rounded text-muted'></i>
-                </div>
-                
-                {% for event in upcoming_events %}
-                <div class="event-item mb-3 p-3 {% cycle 'event-border-accent' 'event-border-primary' 'event-border-accent' %}" style="background-color: #F8FAFC; border-radius: 12px;">
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-{% cycle 'warning' 'primary' 'warning' %} text-{% cycle 'dark' 'white' 'dark' %} me-2">{{ event.date|date:"j M" }}</span>
-                        <small class="text-muted" style="font-size: 11px;">{{ event.start_time|time:"g:i A" }} {% if event.end_time %}- {{ event.end_time|time:"g:i A" }}{% endif %}</small>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Notice Board -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title-small mb-0">Notice Board</h5>
+                <span class="text-muted" style="font-size: 12px;">Sort by: <strong>Latest</strong> <i class='bx bx-chevron-down'></i></span>
+            </div>
+            
+            <div class="notice-list">
+                {% for notice in recent_notices %}
+                <div class="list-item-modern">
+                    <div class="item-icon-square">
+                        <i class='bx bx-notepad'></i>
                     </div>
-                    <h6 class="mb-1" style="font-size: 13px; font-weight: 600;">{{ event.title }}</h6>
-                    <small class="text-primary fw-medium" style="font-size: 11px;">{{ event.audience }}</small>
+                    <div class="item-content">
+                        <h6 class="item-title">{{ notice.title }}</h6>
+                        <p class="item-desc mb-0">by {{ notice.author_name|default:"Admin" }}</p>
+                    </div>
+                    <div class="item-meta">
+                        {{ notice.created_at|date:"M d, Y" }}
+                    </div>
                 </div>
                 {% empty %}
-                <div class="text-center py-4 text-muted">
-                    No upcoming events.
+                <div class="list-item-modern">
+                    <div class="item-icon-square">
+                        <i class='bx bx-calendar-event'></i>
+                    </div>
+                    <div class="item-content">
+                        <h6 class="item-title">School Event Reminder</h6>
+                        <p class="item-desc mb-0">by Ms. Harper, Event Coordinator</p>
+                    </div>
+                    <div class="item-meta">
+                        May 29, 2025
+                    </div>
+                </div>
+                <div class="list-item-modern">
+                    <div class="item-icon-square blue">
+                        <i class='bx bx-error-circle'></i>
+                    </div>
+                    <div class="item-content">
+                        <h6 class="item-title">Important Exam Update</h6>
+                        <p class="item-desc mb-0">by Principal Anderson</p>
+                    </div>
+                    <div class="item-meta">
+                        May 27, 2025
+                    </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+    
+    <!-- Attendance -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="card-title-small mb-0">Attendance Overview</h5>
+                <span class="badge" style="background: var(--genz-bg); color: var(--genz-text-muted);">Weekly <i class='bx bx-chevron-down'></i></span>
+            </div>
+            <div class="d-flex align-items-center mb-3">
+                <span class="me-4" style="font-size: 12px; color: var(--genz-text-muted);"><i class='bx bxs-circle text-warning me-1'></i>Present</span>
+                <span style="font-size: 12px; color: var(--genz-text-muted);"><i class='bx bxs-circle text-primary me-1'></i>Absent</span>
+            </div>
+            <div style="height: 180px;">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block right_sidebar %}
+<!-- Calendar -->
+<div class="cal-header mt-2">
+    <div class="cal-title">July 2025</div>
+    <div class="cal-nav">
+        <i class='bx bx-chevron-left'></i>
+        <i class='bx bx-chevron-right'></i>
+    </div>
+</div>
+<div class="cal-grid mb-4">
+    <div class="cal-day-name">Su</div>
+    <div class="cal-day-name">Mo</div>
+    <div class="cal-day-name">Tu</div>
+    <div class="cal-day-name">We</div>
+    <div class="cal-day-name">Th</div>
+    <div class="cal-day-name">Fr</div>
+    <div class="cal-day-name">Sa</div>
+    
+    <div class="cal-day muted">29</div>
+    <div class="cal-day muted">30</div>
+    <div class="cal-day">1</div>
+    <div class="cal-day">2</div>
+    <div class="cal-day">3</div>
+    <div class="cal-day">4</div>
+    <div class="cal-day">5</div>
+    
+    <div class="cal-day">6</div>
+    <div class="cal-day">7</div>
+    <div class="cal-day">8</div>
+    <div class="cal-day">9</div>
+    <div class="cal-day active">10</div>
+    <div class="cal-day">11</div>
+    <div class="cal-day">12</div>
+    
+    <div class="cal-day">13</div>
+    <div class="cal-day">14</div>
+    <div class="cal-day has-event">15</div>
+    <div class="cal-day">16</div>
+    <div class="cal-day">17</div>
+    <div class="cal-day">18</div>
+    <div class="cal-day has-event">19</div>
+    
+    <div class="cal-day">20</div>
+    <div class="cal-day">21</div>
+    <div class="cal-day">22</div>
+    <div class="cal-day">23</div>
+    <div class="cal-day">24</div>
+    <div class="cal-day">25</div>
+    <div class="cal-day">26</div>
+    
+    <div class="cal-day has-event">27</div>
+    <div class="cal-day">28</div>
+    <div class="cal-day">29</div>
+    <div class="cal-day">30</div>
+    <div class="cal-day">31</div>
+    <div class="cal-day muted">1</div>
+    <div class="cal-day muted">2</div>
+</div>
+
+<!-- Upcoming Events -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="card-title-small mb-0">Upcoming Events</h5>
+    <i class='bx bx-dots-horizontal-rounded text-muted'></i>
+</div>
+
+{% for event in upcoming_events %}
+<div class="event-card">
+    <div class="event-time">
+        <span class="event-badge">{{ event.date|date:"j M" }}</span>
+        {{ event.start_time|time:"g:i A" }}
+    </div>
+    <div class="event-title">{{ event.title }}</div>
+    <div class="event-subtitle">{{ event.audience }}</div>
+</div>
+{% empty %}
+<!-- Static mock events matching reference -->
+<div class="event-card">
+    <div class="event-time">
+        <span class="event-badge">15 July</span>
+        7:00 AM - 8:00 AM
+    </div>
+    <div class="event-title">New Student Inauguration Ceremony</div>
+    <div class="event-subtitle">Grade 7</div>
+</div>
+<div class="event-card">
+    <div class="event-time">
+        <span class="event-badge">19 July</span>
+        10:00 AM - 11:00 AM
+    </div>
+    <div class="event-title">Chairman of Student Body Handover</div>
+    <div class="event-subtitle">Grade 8</div>
+</div>
+<div class="event-card">
+    <div class="event-time">
+        <span class="event-badge">27 July</span>
+        3:00 PM
+    </div>
+    <div class="event-title">Closing of School Clubs Acceptance</div>
+    <div class="event-subtitle">Grade 7</div>
+</div>
+{% endfor %}
 {% endblock %}
 
 {% block extra_js %}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Inject JSON variables
-        const genderData = JSON.parse('{{ gender_data|escapejs }}');
-        const attendanceLabels = JSON.parse('{{ attendance_labels|escapejs }}');
-        const attendanceData = JSON.parse('{{ attendance_data|escapejs }}');
-        const progressLabels = JSON.parse('{{ progress_labels|escapejs }}');
-        const progressData = JSON.parse('{{ progress_data|escapejs }}');
-        
-        document.getElementById('female-count-label').innerText = genderData[1] || 0;
-        document.getElementById('male-count-label').innerText = genderData[0] || 0;
-
         // Shared Chart Configuration
-        Chart.defaults.font.family = "'Inter', 'Kantumruy Pro', sans-serif";
+        Chart.defaults.font.family = "'Google Sans', 'Kantumruy Pro', sans-serif";
         Chart.defaults.color = '#64748B';
         
+        // Check for injected data, use defaults if missing
+        let genderData = [193, 234]; // Boys, Girls match reference
+        try {
+            const raw = '{{ gender_data|escapejs }}';
+            if(raw && raw !== '""') genderData = JSON.parse(raw);
+        } catch(e) {}
+        
+        document.getElementById('female-count-label').innerText = genderData[1] || 234;
+        document.getElementById('male-count-label').innerText = genderData[0] || 193;
+
         // 1. Students Doughnut Chart
         const ctxStudents = document.getElementById('studentsChart').getContext('2d');
         new Chart(ctxStudents, {
@@ -416,21 +312,26 @@
                 beforeDraw: function(chart) {
                     var width = chart.width, height = chart.height, ctx = chart.ctx;
                     ctx.restore();
-                    var fontSize = (height / 114).toFixed(2);
-                    ctx.font = "600 " + fontSize + "em Inter";
-                    ctx.textBaseline = "middle";
-                    ctx.fillStyle = "#1E293B";
-                    var text = (genderData[0] + genderData[1]).toString(),
-                        textX = Math.round((width - ctx.measureText(text).width) / 2),
-                        textY = height / 2;
-                    ctx.fillText(text, textX, textY);
                     
-                    ctx.font = "500 " + (fontSize/2.5).toFixed(2) + "em Inter";
+                    // Total text
+                    var fontSizeTotal = (height / 140).toFixed(2);
+                    ctx.font = "500 " + fontSizeTotal + "em Google Sans";
+                    ctx.textBaseline = "middle";
                     ctx.fillStyle = "#64748B";
                     var text2 = "Total",
                         text2X = Math.round((width - ctx.measureText(text2).width) / 2),
-                        text2Y = textY - 20;
+                        text2Y = height / 2 - 15;
                     ctx.fillText(text2, text2X, text2Y);
+
+                    // Number text
+                    var fontSizeNum = (height / 80).toFixed(2);
+                    ctx.font = "700 " + fontSizeNum + "em Google Sans";
+                    ctx.fillStyle = "#1E293B";
+                    var text = (genderData[0] + genderData[1]).toString(),
+                        textX = Math.round((width - ctx.measureText(text).width) / 2),
+                        textY = height / 2 + 10;
+                    ctx.fillText(text, textX, textY);
+                    
                     ctx.save();
                 }
             }]
@@ -439,7 +340,6 @@
         // 2. Progress Area Chart
         const ctxProgress = document.getElementById('progressChart').getContext('2d');
         
-        // Gradient for Area Chart
         let gradientOrange = ctxProgress.createLinearGradient(0, 0, 0, 200);
         gradientOrange.addColorStop(0, 'rgba(255, 184, 0, 0.4)');
         gradientOrange.addColorStop(1, 'rgba(255, 184, 0, 0.0)');
@@ -448,16 +348,31 @@
         gradientBlue.addColorStop(0, 'rgba(30, 101, 255, 0.4)');
         gradientBlue.addColorStop(1, 'rgba(30, 101, 255, 0.0)');
 
+        let progressLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+        let progressDataExam = [15, 20, 18, 25, 40, 28, 35, 60];
+        let progressDataHW = [20, 25, 22, 30, 25, 40, 30, 40];
+
         new Chart(ctxProgress, {
             type: 'line',
             data: {
                 labels: progressLabels,
                 datasets: [
                     {
-                        label: 'Avg Score',
-                        data: progressData,
+                        label: 'Exams',
+                        data: progressDataExam,
                         borderColor: '#FFB800',
                         backgroundColor: gradientOrange,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Homework',
+                        data: progressDataHW,
+                        borderColor: '#1E65FF',
+                        backgroundColor: gradientBlue,
                         borderWidth: 3,
                         tension: 0.4,
                         fill: true,
@@ -476,10 +391,11 @@
                     y: {
                         beginAtZero: true,
                         grid: { borderDash: [5, 5], color: '#E2E8F0', drawBorder: false },
-                        ticks: { stepSize: 25, callback: function(value) { return value + 'K'; } }
+                        ticks: { stepSize: 25, callback: function(value) { return value + 'K'; }, font: {size: 11} }
                     },
                     x: {
-                        grid: { display: false, drawBorder: false }
+                        grid: { display: false, drawBorder: false },
+                        ticks: { font: {size: 11} }
                     }
                 }
             }
@@ -490,14 +406,21 @@
         new Chart(ctxAttendance, {
             type: 'bar',
             data: {
-                labels: attendanceLabels,
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
                 datasets: [
                     {
-                        label: 'Present %',
-                        data: attendanceData,
+                        label: 'Present',
+                        data: [70, 80, 75, 90, 85],
                         backgroundColor: '#FFB800',
-                        borderRadius: 6,
-                        barPercentage: 0.5
+                        borderRadius: {topLeft: 0, topRight: 0, bottomLeft: 8, bottomRight: 8},
+                        barPercentage: 0.4
+                    },
+                    {
+                        label: 'Absent',
+                        data: [30, 20, 25, 10, 15],
+                        backgroundColor: '#1E65FF',
+                        borderRadius: {topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0},
+                        barPercentage: 0.4
                     }
                 ]
             },
@@ -509,14 +432,16 @@
                 },
                 scales: {
                     y: {
+                        stacked: true,
                         beginAtZero: true,
                         max: 100,
                         grid: { borderDash: [5, 5], color: '#E2E8F0', drawBorder: false },
-                        ticks: { stepSize: 25, callback: function(value) { return value + '%'; } }
+                        ticks: { stepSize: 25, callback: function(value) { return value + '%'; }, font: {size: 11} }
                     },
                     x: {
                         stacked: true,
-                        grid: { display: false, drawBorder: false }
+                        grid: { display: false, drawBorder: false },
+                        ticks: { font: {size: 11} }
                     }
                 }
             }

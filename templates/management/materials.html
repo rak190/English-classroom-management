@@ -1,78 +1,75 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
-
 {% block title %}Materials - ECMS{% endblock %}
-{% block header_title %}Teaching Materials{% endblock %}
+{% block header_title %}Learning Materials{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Academics /</span> Materials</h4>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0 text-dark">Course Materials</h4>
+    <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#uploadForm" aria-expanded="false" aria-controls="uploadForm" style="border-radius: 12px; padding: 10px 20px;">
+        <i class="bx bx-upload me-1"></i> Upload Material
+    </button>
+</div>
+
+<!-- Upload Form (Collapsible) -->
+<div class="collapse mb-4" id="uploadForm">
+    <div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
+        <div class="card-header bg-white border-bottom p-4">
+            <h5 class="mb-0 fw-bold text-dark">Upload New Material</h5>
+        </div>
+        <div class="card-body p-4">
+            <form method="post" enctype="multipart/form-data" class="row gx-4 gy-3">
+                {% csrf_token %}
+                <div class="col-md-4">
+                    <label class="form-label text-muted fw-bold">Title</label>
+                    {% render_field form.title class="form-control" style="border-radius: 12px; padding: 10px 16px;" placeholder="e.g. Chapter 1 Notes" %}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted fw-bold">Course</label>
+                    {% render_field form.course class="form-select" style="border-radius: 12px; padding: 10px 16px;" %}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted fw-bold">File</label>
+                    {% render_field form.file class="form-control" style="border-radius: 12px; padding: 7px 16px;" %}
+                </div>
+                <div class="col-12 mt-4 text-end">
+                    <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 12px;"><i class="bx bx-save me-1"></i> Save Material</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="row">
-    <!-- Upload Form -->
+    {% for mat in materials %}
     <div class="col-md-4 mb-4">
-        <div class="card">
-            <h5 class="card-header border-bottom mb-3"><i class="bx bx-cloud-upload text-primary me-2"></i> Upload Material</h5>
-            <div class="card-body">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label" for="id_course">Class</label>
-                        {% render_field form.course class="form-select" id="id_course" %}
+        <div class="card h-100 border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)';" onmouseout="this.style.transform='none';">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(30, 101, 255, 0.1); color: var(--genz-primary); display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        <i class="bx bxs-file-pdf"></i> <!-- Ideally dynamic icon based on type -->
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="id_title">Title</label>
-                        {% render_field form.title class="form-control" placeholder="e.g. Unit 1 Worksheet" id="id_title" %}
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label" for="id_file">File (PDF, PPT, Image)</label>
-                        {% render_field form.file class="form-control" id="id_file" %}
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Upload File</button>
-                </form>
+                    <span class="badge" style="background: #F1F5F9; color: #475569;">{{ mat.course.class_name }}</span>
+                </div>
+                <h5 class="fw-bold text-dark mb-1 text-truncate" title="{{ mat.title }}">{{ mat.title }}</h5>
+                <p class="text-muted small mb-0"><i class="bx bx-time me-1"></i> {{ mat.uploaded_at|date:"M d, Y" }}</p>
+                
+                <div class="mt-4 pt-3 border-top">
+                    <a href="{{ mat.file.url }}" target="_blank" class="btn btn-outline-primary w-100" style="border-radius: 8px;">
+                        <i class="bx bx-download me-1"></i> Download
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-    
-    <!-- Materials Table -->
-    <div class="col-md-8 mb-4">
-        <div class="card h-100">
-            <h5 class="card-header">Uploaded Materials</h5>
-            <div class="table-responsive text-nowrap">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Class</th>
-                            <th>Uploaded On</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                        {% for material in materials %}
-                        <tr>
-                            <td>
-                                <strong><i class="bx bx-file text-primary me-2"></i> {{ material.title }}</strong>
-                            </td>
-                            <td>{{ material.course.class_name }}</td>
-                            <td>{{ material.uploaded_at|date:"M d, Y" }}</td>
-                            <td>
-                                <a href="{{ material.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank" download>
-                                    <i class="bx bx-download me-1"></i> Download
-                                </a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">
-                                <i class="bx bx-folder-open fs-1 d-block mb-3"></i>
-                                No teaching materials uploaded yet.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div style="width: 80px; height: 80px; background: #F8FAFC; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <i class="bx bx-folder-open" style="font-size: 40px; color: #CBD5E1;"></i>
         </div>
+        <h5 class="fw-bold text-dark">No Materials Found</h5>
+        <p class="text-muted">Upload course materials, slides, or documents for your students.</p>
     </div>
+    {% endfor %}
 </div>
 {% endblock %}

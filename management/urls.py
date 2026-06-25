@@ -23,6 +23,7 @@ urlpatterns = [
     path('homework/', views.homework_view, name='homework_view'),
     path('homework/<int:submission_id>/edit-status/', views.homework_status_edit, name='homework_status_edit'),
     path('scores/', views.score_view, name='score_view'),
+    path('scores/bulk/', views.bulk_score_entry_view, name='bulk_score_entry_view'),
     path('materials/', views.material_view, name='material_view'),
     path('schedule/', views.schedule_view, name='schedule_view'),
     path('progress/', views.progress_tracking_view, name='progress_tracking_view'),

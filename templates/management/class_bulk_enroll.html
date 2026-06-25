@@ -1,106 +1,89 @@
 {% extends 'base.html' %}
-
-{% block title %}Bulk Enroll - ECMS{% endblock %}
-{% block header_title %}Enroll Students{% endblock %}
+{% block title %}Enroll Students to {{ course.class_name }} - ECMS{% endblock %}
+{% block header_title %}Bulk Enrollment{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Classes / {{ course.class_name }} /</span> Enroll Students</h4>
-
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Enroll Students into {{ course.class_name }}</h5>
-                <a href="{% url 'management:class_detail' course.id %}" class="btn btn-outline-secondary btn-sm">
-                    <i class="bx bx-arrow-back me-1"></i> Back to Class
-                </a>
-            </div>
-            
-            <form method="post">
-                {% csrf_token %}
-                <div class="table-responsive text-nowrap">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th style="width: 50px;">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="selectAll">
-                                    </div>
-                                </th>
-                                <th>Student ID</th>
-                                <th>Name</th>
-                                <th>Grade</th>
-                                <th>Gender</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                            {% for student in available_students %}
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input student-checkbox" type="checkbox" name="students" value="{{ student.id }}" id="student_{{ student.id }}">
-                                    </div>
-                                </td>
-                                <td><label for="student_{{ student.id }}" class="mb-0 cursor-pointer"><strong>{{ student.student_id }}</strong></label></td>
-                                <td><label for="student_{{ student.id }}" class="mb-0 cursor-pointer">{{ student.name }}</label></td>
-                                <td><span class="badge bg-label-info">{{ student.grade }}</span></td>
-                                <td>{{ student.get_gender_display }}</td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5" class="text-center py-5 text-muted">
-                                    <i class="bx bx-check-double fs-1 d-block mb-3 text-success"></i>
-                                    All students are already enrolled in this class!
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-                {% if available_students %}
-                <div class="card-footer bg-transparent border-top p-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bx bx-user-plus me-1"></i> Enroll Selected Students
-                    </button>
-                    <span class="text-muted ms-3" id="selectedCount">0 students selected</span>
-                </div>
-                {% endif %}
-            </form>
-        </div>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0 text-dark">
+        <a href="{% url 'management:class_detail' course.id %}" class="text-muted text-decoration-none"><i class='bx bx-arrow-back me-2'></i>{{ course.class_name }}</a>
+    </h4>
 </div>
-{% endblock %}
 
-{% block extra_js %}
+<div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
+    <div class="card-header bg-white border-bottom p-4">
+        <h5 class="mb-0 fw-bold text-dark">Available Students</h5>
+        <p class="text-muted mb-0 mt-1" style="font-size: 14px;">Select the students you want to add to <strong>{{ course.class_name }}</strong></p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="table-responsive text-nowrap" style="max-height: 500px; overflow-y: auto;">
+            <table class="table table-hover mb-0">
+                <thead style="background-color: #F8FAFC; position: sticky; top: 0; z-index: 1;">
+                    <tr>
+                        <th style="width: 50px; padding: 16px 24px !important;">
+                            <input class="form-check-input" type="checkbox" id="selectAll" style="width: 18px; height: 18px;">
+                        </th>
+                        <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">ID</th>
+                        <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Student Name</th>
+                        <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Grade</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for student in available_students %}
+                    <tr style="transition: all 0.2s ease;">
+                        <td style="padding: 16px 24px !important;">
+                            <input class="form-check-input student-checkbox" type="checkbox" name="students" value="{{ student.id }}" style="width: 18px; height: 18px;">
+                        </td>
+                        <td style="padding: 16px 24px !important;"><strong>{{ student.student_id }}</strong></td>
+                        <td style="padding: 16px 24px !important; font-weight: 600;">{{ student.name }}</td>
+                        <td style="padding: 16px 24px !important;">{{ student.grade }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bx bx-check-shield" style="font-size: 40px; color: #CBD5E1; margin-bottom: 10px;"></i><br>
+                            All your students are already enrolled in this class!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if available_students %}
+        <div class="card-footer bg-white border-top p-4 d-flex justify-content-end align-items-center">
+            <span class="text-muted me-4" style="font-size: 14px;" id="selectedCount">0 students selected</span>
+            <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 12px;">
+                <i class="bx bx-user-plus me-1"></i> Enroll Selected
+            </button>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const selectAll = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.student-checkbox');
-        const selectedCount = document.getElementById('selectedCount');
-        
+        const selectAll = document.getElementById("selectAll");
+        const checkboxes = document.querySelectorAll(".student-checkbox");
+        const countDisplay = document.getElementById("selectedCount");
+
         function updateCount() {
-            const count = document.querySelectorAll('.student-checkbox:checked').length;
-            if(selectedCount) selectedCount.textContent = count + ' students selected';
+            if(countDisplay) {
+                const count = document.querySelectorAll(".student-checkbox:checked").length;
+                countDisplay.textContent = count + " student" + (count === 1 ? "" : "s") + " selected";
+            }
         }
 
-        if(selectAll) {
-            selectAll.addEventListener('change', function() {
+        if (selectAll) {
+            selectAll.addEventListener("change", function() {
                 checkboxes.forEach(cb => cb.checked = selectAll.checked);
                 updateCount();
             });
         }
 
         checkboxes.forEach(cb => {
-            cb.addEventListener('change', function() {
-                if (!this.checked && selectAll) selectAll.checked = false;
-                
-                // If all are checked manually, check the selectAll box
-                if (document.querySelectorAll('.student-checkbox:checked').length === checkboxes.length) {
-                    if(selectAll) selectAll.checked = true;
-                }
-                updateCount();
-            });
+            cb.addEventListener("change", updateCount);
         });
     });
 </script>

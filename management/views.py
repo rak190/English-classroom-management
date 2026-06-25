@@ -219,6 +219,46 @@ def score_view(request):
     })
 
 @login_required
+def bulk_score_entry_view(request):
+    courses = Course.objects.filter(teacher=request.user)
+    selected_course = None
+    students = []
+    
+    if request.method == 'POST':
+        course_id = request.POST.get('course')
+        score_type = request.POST.get('score_type')
+        
+        if course_id:
+            selected_course = get_object_or_404(Course, pk=course_id, teacher=request.user)
+            
+            if 'save_scores' in request.POST and score_type:
+                student_ids = request.POST.getlist('student_ids')
+                for s_id in student_ids:
+                    value_str = request.POST.get(f'score_{s_id}')
+                    if value_str and value_str.strip():
+                        try:
+                            value = float(value_str)
+                            Score.objects.update_or_create(
+                                student_id=s_id,
+                                course=selected_course,
+                                score_type=score_type,
+                                defaults={'value': value}
+                            )
+                        except ValueError:
+                            pass # Skip invalid scores
+                return redirect('management:score_view')
+            else:
+                enrollments = selected_course.enrollments.select_related('student').all()
+                for e in enrollments:
+                    students.append(e.student)
+                    
+    return render(request, 'management/score_bulk.html', {
+        'courses': courses,
+        'selected_course': selected_course,
+        'students': students,
+    })
+
+@login_required
 def material_view(request):
     if request.method == 'POST':
         form = MaterialForm(request.POST, request.FILES)
