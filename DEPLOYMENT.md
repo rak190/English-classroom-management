@@ -28,7 +28,7 @@ Vercel needs to pull your code from a GitHub repository to build your app.
    git commit -m "Initial commit for deployment"
    git branch -M main
    # IMPORTANT: Replace the URL below with YOUR actual GitHub repository URL
-   git remote add origin https://github.com/YOUR_USERNAME/English-classroom-management.git
+   git remote add origin https://github.com/rak190/English-classroom-management
    git push -u origin main
    ```
 

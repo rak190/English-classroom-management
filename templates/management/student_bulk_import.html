@@ -31,24 +31,31 @@
                 </div>
                 {% endif %}
 
-                <p>Upload a CSV file to add multiple students at once. Please ensure your file matches the required format.</p>
+                <p>ទាញយកគំរូ CSV រួចបញ្ចូលទិន្នន័យ ឬ ប្រើប្រាស់តំណភ្ជាប់ Google Sheet (Google Sheet URL) ដោយផ្ទាល់។ (Upload a CSV file or paste a Google Sheet URL to add multiple students at once. Please ensure your file matches the required format.)</p>
                 
                 <div class="mb-4">
                     <a href="?download_template=1" class="btn btn-outline-primary">
-                        <i class="bx bx-download me-1"></i> Download CSV Template
+                        <i class="bx bx-download me-1"></i> ទាញយកគំរូ CSV (Download Template)
                     </a>
                 </div>
 
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="csvFile" class="form-label">Upload CSV File <span class="text-danger">*</span></label>
-                        <input class="form-control" type="file" id="csvFile" name="csv_file" accept=".csv" required>
+                    
+                    <div class="mb-4 p-3 border rounded bg-light">
+                        <h6 class="fw-bold mb-2"><i class='bx bxl-google text-danger'></i> ជម្រើសទី ១៖ ប្រើប្រាស់ Google Sheet (Option 1: Google Sheet URL)</h6>
+                        <p class="small text-muted mb-2">ចម្លងតំណភ្ជាប់ (Link) ពី Google Sheet របស់អ្នករួចដាក់បញ្ចូលទីនេះ។ សូមប្រាកដថាអ្នកបានបើកសិទ្ធិ "Anyone with the link can view"។</p>
+                        <input class="form-control" type="url" name="google_sheet_url" placeholder="https://docs.google.com/spreadsheets/d/..." >
+                    </div>
+                    
+                    <div class="mb-3 p-3 border rounded">
+                        <h6 class="fw-bold mb-2"><i class='bx bx-file text-primary'></i> ជម្រើសទី ២៖ បញ្ចូលឯកសារ CSV (Option 2: Upload CSV)</h6>
+                        <input class="form-control" type="file" id="csvFile" name="csv_file" accept=".csv">
                     </div>
                     
                     <div class="mt-4">
-                        <button type="submit" class="btn btn-primary me-2">Import Students</button>
-                        <a href="{% url 'management:student_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary me-2">បញ្ចូលទិន្នន័យសិស្ស (Import Students)</button>
+                        <a href="{% url 'management:student_list' %}" class="btn btn-outline-secondary">បោះបង់ (Cancel)</a>
                     </div>
                 </form>
             </div>

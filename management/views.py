@@ -358,15 +358,37 @@ def test_generator_view(request):
 @login_required
 def student_bulk_import(request):
     if request.method == 'POST':
-        if 'csv_file' not in request.FILES:
-            return render(request, 'management/student_bulk_import.html', {'error': 'No file uploaded.'})
+        import urllib.request
+        file_data = None
         
-        csv_file = request.FILES['csv_file']
-        if not csv_file.name.endswith('.csv'):
-            return render(request, 'management/student_bulk_import.html', {'error': 'Please upload a valid CSV file.'})
+        # Check if Google Sheet URL is provided
+        sheet_url = request.POST.get('google_sheet_url', '').strip()
+        if sheet_url:
+            try:
+                # Convert Google Sheet URL to CSV export URL
+                # Typical URL: https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit#gid=0
+                if '/edit' in sheet_url:
+                    csv_url = sheet_url.split('/edit')[0] + '/export?format=csv'
+                else:
+                    csv_url = sheet_url
+                    
+                req = urllib.request.Request(csv_url, headers={'User-Agent': 'Mozilla/5.0'})
+                with urllib.request.urlopen(req) as response:
+                    file_data = response.read().decode('utf-8-sig').splitlines()
+            except Exception as e:
+                return render(request, 'management/student_bulk_import.html', {'error': f'Failed to fetch Google Sheet: {str(e)}. Make sure the link is set to "Anyone with the link can view".'})
+        
+        # Fallback to CSV upload
+        elif 'csv_file' in request.FILES and request.FILES['csv_file']:
+            csv_file = request.FILES['csv_file']
+            if not csv_file.name.endswith('.csv'):
+                return render(request, 'management/student_bulk_import.html', {'error': 'Please upload a valid CSV file.'})
+            file_data = csv_file.read().decode('utf-8-sig').splitlines()
+            
+        else:
+            return render(request, 'management/student_bulk_import.html', {'error': 'Please provide either a CSV file or a Google Sheet URL.'})
             
         try:
-            file_data = csv_file.read().decode('utf-8-sig').splitlines()
             reader = csv.DictReader(file_data)
             
             students_to_create = []
@@ -404,12 +426,14 @@ def student_bulk_import(request):
             return render(request, 'management/student_bulk_import.html', {'error': f'Error processing file: {str(e)}'})
             
     if 'download_template' in request.GET:
-        response = HttpResponse(content_type='text/csv')
+        response = HttpResponse(content_type='text/csv; charset=utf-8-sig')
         response['Content-Disposition'] = 'attachment; filename="student_import_template.csv"'
+        # Write BOM to ensure Excel opens it as UTF-8
+        response.write('\ufeff')
         writer = csv.writer(response)
         writer.writerow(['student_id', 'name', 'gender', 'grade', 'parent_phone', 'phone', 'join_date'])
-        writer.writerow(['STU-1001', 'Sok Dara', 'M', 'Grade 8', '012345678', '098765432', '2025-09-01'])
-        writer.writerow(['STU-1002', 'Meas Bopha', 'F', 'Grade 8', '012345679', '', '2025-09-01'])
+        writer.writerow(['STU-1001', 'សុខ តារា', 'M', 'ថ្នាក់ទី ៨', '012345678', '098765432', '2025-09-01'])
+        writer.writerow(['STU-1002', 'មាស បុប្ផា', 'F', 'ថ្នាក់ទី ៨', '012345679', '', '2025-09-01'])
         return response
         
     return render(request, 'management/student_bulk_import.html')
