@@ -91,6 +91,10 @@
         background-color: var(--genz-primary);
         color: white;
     }
+    
+    /* Event Item Borders */
+    .event-border-accent { border-left: 4px solid var(--genz-accent); }
+    .event-border-primary { border-left: 4px solid var(--genz-primary); }
 </style>
 {% endblock %}
 
@@ -350,7 +354,7 @@
                 </div>
                 
                 {% for event in upcoming_events %}
-                <div class="event-item mb-3 p-3" style="background-color: #F8FAFC; border-radius: 12px; border-left: 4px solid {% cycle 'var(--genz-accent)' 'var(--genz-primary)' 'var(--genz-accent)' %};">
+                <div class="event-item mb-3 p-3 {% cycle 'event-border-accent' 'event-border-primary' 'event-border-accent' %}" style="background-color: #F8FAFC; border-radius: 12px;">
                     <div class="d-flex align-items-center mb-2">
                         <span class="badge bg-{% cycle 'warning' 'primary' 'warning' %} text-{% cycle 'dark' 'white' 'dark' %} me-2">{{ event.date|date:"j M" }}</span>
                         <small class="text-muted" style="font-size: 11px;">{{ event.start_time|time:"g:i A" }} {% if event.end_time %}- {{ event.end_time|time:"g:i A" }}{% endif %}</small>
