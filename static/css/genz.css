@@ -80,10 +80,25 @@ h1, h2, h3, h4, h5, h6, .navbar-brand, .menu-text {
     width: 260px;
     flex-shrink: 0;
     height: 100%;
-    z-index: 10;
+    z-index: 1075;
     padding-top: 10px;
     display: flex;
     flex-direction: column;
+}
+
+@media (max-width: 1199.98px) {
+    #layout-menu {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        transform: translate3d(-100%, 0, 0);
+        transition: transform 0.3s ease;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .layout-menu-expanded #layout-menu {
+        transform: translate3d(0, 0, 0);
+    }
 }
 
 /* Right Sidebar */
