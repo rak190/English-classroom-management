@@ -20,13 +20,30 @@
         <div class="card-body p-4">
             <form method="post" class="row gx-4 gy-3">
                 {% csrf_token %}
+                {% if form.errors %}
+                    <div class="col-12">
+                        <div class="alert alert-danger" style="border-radius: 12px;">
+                            Please correct the errors below:
+                            <ul class="mb-0 mt-2">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
                 <div class="col-md-3">
                     <label class="form-label text-muted fw-bold">Course</label>
                     {% render_field form.course class="form-select" style="border-radius: 12px; padding: 10px 16px;" %}
                 </div>
                 <div class="col-md-3">
                     <label class="form-label text-muted fw-bold">Day of Week</label>
-                    {% render_field form.day_of_week class="form-select" style="border-radius: 12px; padding: 10px 16px;" %}
+                    {% render_field form.day class="form-select" style="border-radius: 12px; padding: 10px 16px;" %}
                 </div>
                 <div class="col-md-3">
                     <label class="form-label text-muted fw-bold">Start Time</label>
@@ -61,7 +78,7 @@
                 {% for schedule in schedules %}
                 <tr style="transition: all 0.2s ease;">
                     <td style="padding: 16px 24px !important;">
-                        <span class="badge" style="background: rgba(30, 101, 255, 0.1); color: var(--genz-primary);">{{ schedule.get_day_of_week_display }}</span>
+                        <span class="badge" style="background: rgba(30, 101, 255, 0.1); color: var(--genz-primary);">{{ schedule.get_day_display }}</span>
                     </td>
                     <td style="padding: 16px 24px !important; font-weight: 600;">{{ schedule.course.class_name }}</td>
                     <td style="padding: 16px 24px !important;">

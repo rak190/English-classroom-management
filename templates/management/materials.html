@@ -20,6 +20,23 @@
         <div class="card-body p-4">
             <form method="post" enctype="multipart/form-data" class="row gx-4 gy-3">
                 {% csrf_token %}
+                {% if form.errors %}
+                    <div class="col-12">
+                        <div class="alert alert-danger" style="border-radius: 12px;">
+                            Please correct the errors below:
+                            <ul class="mb-0 mt-2">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
                 <div class="col-md-4">
                     <label class="form-label text-muted fw-bold">Title</label>
                     {% render_field form.title class="form-control" style="border-radius: 12px; padding: 10px 16px;" placeholder="e.g. Chapter 1 Notes" %}

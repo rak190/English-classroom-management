@@ -276,15 +276,25 @@ def material_view(request):
 @login_required
 def schedule_view(request):
     from .models import Schedule
+    from django import forms
+    class ScheduleForm(forms.ModelForm):
+        class Meta:
+            model = Schedule
+            fields = ['course', 'day', 'start_time', 'end_time']
+    
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['course'].teacher == request.user:
+                form.save()
+            return redirect('management:schedule_view')
+    else:
+        form = ScheduleForm()
+        form.fields['course'].queryset = Course.objects.filter(teacher=request.user)
+        
     schedules = Schedule.objects.filter(course__teacher=request.user).select_related('course').order_by('day', 'start_time')
     
-    # Group schedules by day for easier rendering in template
-    days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-    schedule_by_day = {day: [] for day in days}
-    for s in schedules:
-        schedule_by_day[s.day].append(s)
-        
-    return render(request, 'management/schedule.html', {'schedule_by_day': schedule_by_day})
+    return render(request, 'management/schedule.html', {'form': form, 'schedules': schedules})
 
 @login_required
 def progress_tracking_view(request):
