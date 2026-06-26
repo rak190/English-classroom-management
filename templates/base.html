@@ -166,17 +166,17 @@
                             </div>
                             
                             <!-- Profile & Notifications -->
-                            <div class="bell-icon ms-md-2" style="width: 36px; height: 36px; font-size: 18px;">
-                                <i class="bx bx-bell"></i>
-                                <span class="bell-dot" style="top: 8px; right: 8px; width: 6px; height: 6px;"></span>
-                            </div>
-                            <div class="d-flex align-items-center ms-2">
-                                <div class="profile-avatar mb-0 me-2" style="width: 40px; height: 40px; font-size: 16px;">
+                            <div class="d-flex align-items-center ms-md-4">
+                                <div class="profile-avatar mb-0 me-3" style="width: 44px; height: 44px; font-size: 16px;">
                                     <img src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=FFB800&color=FFFFFF" alt="" class="w-100 h-100 rounded-circle">
                                 </div>
-                                <div class="profile-info d-none d-md-block">
-                                    <h6 class="profile-name mb-0" style="font-size: 14px;">{{ request.user.first_name|default:request.user.username }}</h6>
-                                    <p class="profile-role mb-0" style="font-size: 11px;">Teacher</p>
+                                <div class="profile-info d-none d-md-block me-3">
+                                    <h6 class="profile-name mb-0" style="font-size: 15px; font-weight: 700;">{{ request.user.first_name|default:request.user.username }}</h6>
+                                    <p class="profile-role mb-0" style="font-size: 12px; color: #94A3B8;">Admin</p>
+                                </div>
+                                <div class="bell-icon position-relative d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 20px; color: var(--genz-text-main); cursor: pointer; border: none; background: #F8FAFC; border-radius: 50%;">
+                                    <i class="bx bx-bell"></i>
+                                    <span class="bell-dot position-absolute" style="top: 10px; right: 10px; width: 8px; height: 8px; background-color: #EF4444; border-radius: 50%; border: 2px solid #F8FAFC;"></span>
                                 </div>
                             </div>
                         </div>
