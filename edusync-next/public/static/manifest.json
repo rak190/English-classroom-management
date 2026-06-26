@@ -1,0 +1,21 @@
+{
+    "name": "Edusync English Classroom Management",
+    "short_name": "Edusync",
+    "description": "Progressive Web App for managing English classrooms, students, and attendance.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#F4F7FE",
+    "theme_color": "#1E65FF",
+    "icons": [
+      {
+        "src": "/static/img/icons/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/static/img/icons/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
