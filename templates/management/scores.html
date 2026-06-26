@@ -27,7 +27,7 @@
                             <td style="padding: 16px 24px !important;">
                                 <div class="d-flex align-items-center">
                                     <div class="progress w-100 me-3" style="height: 8px; border-radius: 4px;">
-                                        <div class="progress-bar {% if student.average >= 85 %}bg-success{% elif student.average >= 60 %}bg-primary{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ student.average }}%; border-radius: 4px;" aria-valuenow="{{ student.average }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar {% if student.average >= 85 %}bg-success{% elif student.average >= 60 %}bg-primary{% else %}bg-danger{% endif %}" role="progressbar" style="border-radius: 4px;" aria-valuenow="{{ student.average }}" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <span class="fw-bold text-dark">{{ student.average|floatformat:1 }}%</span>
                                 </div>
@@ -89,4 +89,13 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.progress-bar').forEach(function(el) {
+            if (el.hasAttribute('aria-valuenow')) {
+                el.style.width = el.getAttribute('aria-valuenow') + '%';
+            }
+        });
+    });
+</script>
 {% endblock %}

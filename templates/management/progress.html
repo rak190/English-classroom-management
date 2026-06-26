@@ -19,7 +19,7 @@
                 
                 <div class="d-flex align-items-center mt-4">
                     <div class="progress w-100 me-3" style="height: 12px; border-radius: 6px; background-color: #F1F5F9;">
-                        <div class="progress-bar {% if stat.avg_score >= 85 %}bg-success{% elif stat.avg_score >= 60 %}bg-primary{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ stat.avg_score }}%; border-radius: 6px;" aria-valuenow="{{ stat.avg_score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar {% if stat.avg_score >= 85 %}bg-success{% elif stat.avg_score >= 60 %}bg-primary{% else %}bg-danger{% endif %}" role="progressbar" style="border-radius: 6px;" aria-valuenow="{{ stat.avg_score }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <span class="fw-bold fs-5 text-dark">{{ stat.avg_score|floatformat:1 }}%</span>
                 </div>
@@ -47,4 +47,13 @@
     </div>
     {% endfor %}
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.progress-bar').forEach(function(el) {
+            if (el.hasAttribute('aria-valuenow')) {
+                el.style.width = el.getAttribute('aria-valuenow') + '%';
+            }
+        });
+    });
+</script>
 {% endblock %}
