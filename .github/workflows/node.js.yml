@@ -26,6 +26,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: 'edusync-next/package-lock.json'
     - run: npm ci
+      working-directory: ./edusync-next
+    - run: npx prisma generate
+      working-directory: ./edusync-next
     - run: npm run build --if-present
-    - run: npm test
+      working-directory: ./edusync-next
+    - run: npm test --if-present
+      working-directory: ./edusync-next
