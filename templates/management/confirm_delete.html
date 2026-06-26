@@ -5,18 +5,21 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card mb-4 border-danger shadow-sm">
-            <div class="card-header bg-danger text-white">
-                <h5 class="mb-0 text-white"><i class="bx bx-error me-2"></i> Confirm Deletion</h5>
-            </div>
-            <div class="card-body mt-4">
-                <p class="fs-5">Are you sure you want to delete <strong>{{ object }}</strong>?</p>
-                <p class="text-muted">This action cannot be undone.</p>
+    <div class="col-md-6 col-lg-5">
+        <div class="card" style="border-left: 4px solid var(--es-danger);">
+            <div class="card-body p-4 text-center">
+                <div class="empty-state-icon mx-auto mb-3" style="background: var(--es-danger-light);">
+                    <i class="bx bx-error" style="color: var(--es-danger);"></i>
+                </div>
+                <h5 class="fw-bold mb-2" style="color: var(--es-text);">Confirm Deletion</h5>
+                <p style="color: var(--es-text-secondary); font-size: 14px;">Are you sure you want to delete <strong style="color: var(--es-text);">{{ object }}</strong>?</p>
+                <p style="color: var(--es-text-tertiary); font-size: 12px;">This action cannot be undone.</p>
                 
-                <form method="post" class="mt-4">
+                <form method="post" class="mt-4 d-flex gap-2 justify-content-center flex-wrap">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger me-2">Yes, Delete</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bx bx-trash me-1"></i> Yes, Delete
+                    </button>
                     <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancel</a>
                 </form>
             </div>

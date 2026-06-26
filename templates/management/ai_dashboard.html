@@ -2,105 +2,46 @@
 {% block title %}AI Tools Dashboard - ECMS{% endblock %}
 {% block header_title %}Generative AI Lab{% endblock %}
 
-{% block extra_css %}
-<style>
-    .ai-card {
-        border-radius: var(--genz-radius);
-        transition: all 0.3s ease;
-        border: none;
-        background: var(--genz-card-bg);
-        box-shadow: var(--genz-shadow);
-        overflow: hidden;
-        position: relative;
-        padding: 30px;
-        text-align: center;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .ai-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-    }
-    .icon-wrapper {
-        width: 80px;
-        height: 80px;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        color: white;
-    }
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, var(--genz-primary) 0%, #4F8CFF 100%);
-    }
-    .bg-gradient-success {
-        background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-    }
-    .bg-gradient-warning {
-        background: linear-gradient(135deg, var(--genz-accent) 0%, #FDE047 100%);
-    }
-    .ai-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--genz-text-main);
-        margin-bottom: 10px;
-    }
-    .ai-desc {
-        color: var(--genz-text-muted);
-        font-size: 14px;
-        line-height: 1.5;
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0 text-dark">Select a Tool</h4>
-    <span class="badge bg-white text-muted" style="border: 1px solid var(--genz-border);">Powered by Gemini</span>
+<div class="page-header">
+    <h4 class="page-header-title">Select a Tool</h4>
+    <div class="page-header-actions">
+        <span class="badge" style="background: white; color: var(--es-text-secondary); border: 1px solid var(--es-border);">Powered by Gemini</span>
+    </div>
 </div>
 
-<div class="row">
+<div class="grid-3">
     <!-- Worksheet Generator -->
-    <div class="col-md-4 mb-4">
-        <a href="{% url 'management:ai_worksheet' %}" class="text-decoration-none">
-            <div class="ai-card">
-                <div class="icon-wrapper bg-gradient-primary">
-                    <i class="bx bx-file"></i>
-                </div>
-                <h5 class="ai-title">Worksheet Generator</h5>
-                <p class="ai-desc">Instantly generate grammar or vocabulary worksheets tailored to your students' level, complete with answer keys.</p>
+    <a href="{% url 'management:ai_worksheet' %}" class="text-decoration-none">
+        <div class="ai-card">
+            <div class="ai-icon-wrapper" style="background: linear-gradient(135deg, var(--es-primary) 0%, #4F8CFF 100%);">
+                <i class="bx bx-file"></i>
             </div>
-        </a>
-    </div>
+            <h5 class="ai-title">Worksheet Generator</h5>
+            <p class="ai-desc">Instantly generate grammar or vocabulary worksheets tailored to your students' level, complete with answer keys.</p>
+        </div>
+    </a>
 
     <!-- Lesson Plan Generator -->
-    <div class="col-md-4 mb-4">
-        <a href="{% url 'management:ai_lesson_plan' %}" class="text-decoration-none">
-            <div class="ai-card">
-                <div class="icon-wrapper bg-gradient-success">
-                    <i class="bx bx-chalkboard"></i>
-                </div>
-                <h5 class="ai-title">Lesson Plan Generator</h5>
-                <p class="ai-desc">Create detailed, timed lesson plans with clear objectives, presentation, and practice stages.</p>
+    <a href="{% url 'management:ai_lesson_plan' %}" class="text-decoration-none">
+        <div class="ai-card">
+            <div class="ai-icon-wrapper" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
+                <i class="bx bx-chalkboard"></i>
             </div>
-        </a>
-    </div>
+            <h5 class="ai-title">Lesson Plan Generator</h5>
+            <p class="ai-desc">Create detailed, timed lesson plans with clear objectives, presentation, and practice stages.</p>
+        </div>
+    </a>
 
     <!-- Test Generator -->
-    <div class="col-md-4 mb-4">
-        <a href="{% url 'management:ai_test' %}" class="text-decoration-none">
-            <div class="ai-card">
-                <div class="icon-wrapper bg-gradient-warning">
-                    <i class="bx bx-task text-dark"></i>
-                </div>
-                <h5 class="ai-title">Test Generator</h5>
-                <p class="ai-desc">Automatically construct monthly or semester tests covering multiple topics, including a full marking scheme.</p>
+    <a href="{% url 'management:ai_test' %}" class="text-decoration-none">
+        <div class="ai-card">
+            <div class="ai-icon-wrapper" style="background: linear-gradient(135deg, var(--es-accent) 0%, #FDE047 100%);">
+                <i class="bx bx-task" style="color: #1E293B;"></i>
             </div>
-        </a>
-    </div>
+            <h5 class="ai-title">Test Generator</h5>
+            <p class="ai-desc">Automatically construct monthly or semester tests covering multiple topics, including a full marking scheme.</p>
+        </div>
+    </a>
 </div>
 {% endblock %}

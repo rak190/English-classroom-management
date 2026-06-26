@@ -3,92 +3,98 @@
 {% block header_title %}Score Management{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Academics /</span> Scores</h4>
+<div class="page-breadcrumb">
+    <span>Academics /</span> <strong>Scores</strong>
+</div>
 
-<div class="row">
+<div class="grid-2">
     <!-- Averages Table -->
-    <div class="col-md-5 mb-4">
-        <div class="card h-100 border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
-            <div class="card-header bg-white border-bottom pt-4 pb-3">
-                <h5 class="mb-0 fw-bold text-dark">Student Averages</h5>
-            </div>
-            <div class="table-responsive text-nowrap">
-                <table class="table table-hover mb-0">
-                    <thead style="background-color: #F8FAFC;">
-                        <tr>
-                            <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Student Name</th>
-                            <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Avg Score</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                        {% for student in student_averages %}
-                        <tr style="transition: all 0.2s ease;">
-                            <td style="padding: 16px 24px !important;"><strong>{{ student.student__name }}</strong></td>
-                            <td style="padding: 16px 24px !important;">
-                                <div class="d-flex align-items-center">
-                                    <div class="progress w-100 me-3" style="height: 8px; border-radius: 4px;">
-                                        <div class="progress-bar {% if student.average >= 85 %}bg-success{% elif student.average >= 60 %}bg-primary{% else %}bg-danger{% endif %}" role="progressbar" style="border-radius: 4px;" aria-valuenow="{{ student.average }}" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <span class="fw-bold text-dark">{{ student.average|floatformat:1 }}%</span>
+    <div class="card">
+        <div class="card-header-clean">
+            <h6 class="card-section-title mb-0">Student Averages</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-clean mb-0">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Avg Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in student_averages %}
+                    <tr>
+                        <td class="td-bold">{{ student.student__name }}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="progress flex-grow-1" style="height: 6px;">
+                                    <div class="progress-bar {% if student.average >= 85 %}bg-success{% elif student.average >= 60 %}bg-primary{% else %}bg-danger{% endif %}" role="progressbar" aria-valuenow="{{ student.average }}" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="2" class="text-center py-5 text-muted">No averages calculated yet.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                                <span class="td-bold" style="min-width: 42px; text-align: right;">{{ student.average|floatformat:1 }}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2">
+                            <div class="empty-state" style="padding: 32px 16px;">
+                                <p class="empty-state-desc">No averages calculated yet.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 
     <!-- All Scores Table -->
-    <div class="col-md-7 mb-4">
-        <div class="card h-100 border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
-            <div class="card-header bg-white border-bottom pt-4 pb-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-dark">Individual Scores</h5>
-                <a href="{% url 'management:bulk_score_entry_view' %}" class="btn btn-primary btn-sm px-3 py-2" style="border-radius: 10px;">
-                    <i class="bx bx-list-plus me-1"></i> Bulk Enter Scores
-                </a>
-            </div>
-            <div class="table-responsive text-nowrap">
-                <table class="table table-hover mb-0">
-                    <thead style="background-color: #F8FAFC;">
-                        <tr>
-                            <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Student</th>
-                            <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Class</th>
-                            <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Assessment</th>
-                            <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                        {% for score in scores %}
-                        <tr style="transition: all 0.2s ease;">
-                            <td style="padding: 16px 24px !important;"><strong>{{ score.student.name }}</strong></td>
-                            <td style="padding: 16px 24px !important; color: #64748B;">{{ score.course.class_name }}</td>
-                            <td style="padding: 16px 24px !important;">
-                                <span class="badge" style="background: rgba(30, 101, 255, 0.1); color: var(--genz-primary);">{{ score.score_type }}</span>
-                            </td>
-                            <td class="fw-bold text-dark" style="padding: 16px 24px !important;">{{ score.value|floatformat:1 }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">
-                                <div style="width: 64px; height: 64px; background: #F8FAFC; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-                                    <i class="bx bx-award" style="font-size: 32px; color: #CBD5E1;"></i>
-                                </div><br>
-                                No scores recorded yet.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <div class="card">
+        <div class="card-header-clean d-flex justify-content-between align-items-center">
+            <h6 class="card-section-title mb-0">Individual Scores</h6>
+            <a href="{% url 'management:bulk_score_entry_view' %}" class="btn btn-primary btn-sm">
+                <i class="bx bx-list-plus"></i> Bulk Enter
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-clean mb-0">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th class="d-none d-md-table-cell">Class</th>
+                        <th>Assessment</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                    <tr>
+                        <td class="td-bold">{{ score.student.name }}</td>
+                        <td class="d-none d-md-table-cell td-muted">{{ score.course.class_name }}</td>
+                        <td>
+                            <span class="badge" style="background: var(--es-primary-light); color: var(--es-primary);">{{ score.score_type }}</span>
+                        </td>
+                        <td class="td-bold">{{ score.value|floatformat:1 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bx bx-award"></i>
+                                </div>
+                                <div class="empty-state-title">No Scores</div>
+                                <p class="empty-state-desc">No scores recorded yet. Use bulk entry to add scores.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('.progress-bar').forEach(function(el) {

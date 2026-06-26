@@ -5,162 +5,149 @@
 {% block header_title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="row">
-    <!-- Top Metrics Row -->
-    <div class="col-md-3 mb-4">
-        <a href="{% url 'management:student_list' %}" class="text-decoration-none d-block h-100">
-            <div class="card card-metric card-metric-orange">
-                <div class="metric-value">{{ total_students }}</div>
-                <div class="metric-label">Students</div>
-                <div class="metric-arrow">
-                    <i class='bx bx-right-top-arrow-circle' style="font-size: 20px;"></i>
-                </div>
+<!-- Stat Cards Row -->
+<div class="stat-row">
+    <a href="{% url 'management:student_list' %}">
+        <div class="card card-metric card-metric-orange">
+            <div class="metric-value">{{ total_students }}</div>
+            <div class="metric-label">Students</div>
+            <div class="metric-arrow">
+                <i class='bx bx-right-top-arrow-circle'></i>
             </div>
-        </a>
-    </div>
-    <div class="col-md-3 mb-4">
-        <a href="{% url 'management:class_list' %}" class="text-decoration-none d-block h-100">
-            <div class="card card-metric card-metric-orange">
-                <div class="metric-value">{{ active_classes }}</div>
-                <div class="metric-label">Classes</div>
-                <div class="metric-arrow">
-                    <i class='bx bx-right-top-arrow-circle' style="font-size: 20px;"></i>
-                </div>
+        </div>
+    </a>
+    <a href="{% url 'management:class_list' %}">
+        <div class="card card-metric card-metric-orange">
+            <div class="metric-value">{{ active_classes }}</div>
+            <div class="metric-label">Classes</div>
+            <div class="metric-arrow">
+                <i class='bx bx-right-top-arrow-circle'></i>
             </div>
-        </a>
-    </div>
-    <div class="col-md-3 mb-4">
-        <a href="{% url 'management:attendance_view' %}" class="text-decoration-none d-block h-100">
-            <div class="card card-metric card-metric-orange">
-                <div class="metric-value">{{ today_attendance_present }}</div>
-                <div class="metric-label">Attendance</div>
-                <div class="metric-arrow">
-                    <i class='bx bx-right-top-arrow-circle' style="font-size: 20px;"></i>
-                </div>
+        </div>
+    </a>
+    <a href="{% url 'management:attendance_view' %}">
+        <div class="card card-metric card-metric-orange">
+            <div class="metric-value">{{ today_attendance_present }}</div>
+            <div class="metric-label">Attendance</div>
+            <div class="metric-arrow">
+                <i class='bx bx-right-top-arrow-circle'></i>
             </div>
-        </a>
-    </div>
-    <div class="col-md-3 mb-4">
-        <a href="{% url 'management:homework_view' %}" class="text-decoration-none d-block h-100">
-            <div class="card card-metric card-metric-blue">
-                <div class="metric-value">{{ hw_submitted }}</div>
-                <div class="metric-label">Homework</div>
-                <div class="metric-arrow">
-                    <i class='bx bx-right-top-arrow-circle' style="font-size: 20px;"></i>
-                </div>
+        </div>
+    </a>
+    <a href="{% url 'management:homework_view' %}">
+        <div class="card card-metric card-metric-blue">
+            <div class="metric-value">{{ hw_submitted }}</div>
+            <div class="metric-label">Homework</div>
+            <div class="metric-arrow">
+                <i class='bx bx-right-top-arrow-circle'></i>
             </div>
-        </a>
-    </div>
+        </div>
+    </a>
 </div>
 
-<div class="row">
-    <!-- Charts Row 1 -->
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="card-title-small mb-0">Students</h5>
-                <span class="badge" style="background: var(--genz-bg); color: var(--genz-text-muted);">Grade 7 <i class='bx bx-chevron-down'></i></span>
+<!-- Charts Row -->
+<div class="chart-row">
+    <!-- Students Doughnut -->
+    <div class="card p-3 p-md-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="card-section-title mb-0">Students</h6>
+            <span class="badge badge-filter">All <i class='bx bx-chevron-down'></i></span>
+        </div>
+        <div class="chart-container d-flex justify-content-center align-items-center" style="height: 180px;">
+            <canvas id="studentsChart"></canvas>
+        </div>
+        <div class="d-flex justify-content-center mt-3 gap-4">
+            <div class="text-center">
+                <span class="d-block" style="font-size: 12px; color: var(--es-text-secondary);"><i class='bx bxs-circle' style="color: var(--es-accent);"></i> Girls</span>
+                <strong style="font-size: 16px; color: var(--es-text);" id="female-count-label">0</strong>
             </div>
-            <div class="position-relative d-flex justify-content-center align-items-center" style="height: 200px;">
-                <canvas id="studentsChart"></canvas>
-            </div>
-            <div class="d-flex justify-content-center mt-4 gap-5">
-                <div class="text-center">
-                    <span class="d-block text-muted" style="font-size: 13px;"><i class='bx bxs-circle text-warning me-2'></i>Girls</span>
-                    <strong class="fs-5" id="female-count-label" style="color: var(--genz-text-main);">0</strong>
-                </div>
-                <div class="text-center">
-                    <span class="d-block text-muted" style="font-size: 13px;"><i class='bx bxs-circle text-primary me-2'></i>Boys</span>
-                    <strong class="fs-5" id="male-count-label" style="color: var(--genz-text-main);">0</strong>
-                </div>
+            <div class="text-center">
+                <span class="d-block" style="font-size: 12px; color: var(--es-text-secondary);"><i class='bx bxs-circle' style="color: var(--es-primary);"></i> Boys</span>
+                <strong style="font-size: 16px; color: var(--es-text);" id="male-count-label">0</strong>
             </div>
         </div>
     </div>
     
-    <div class="col-md-8 mb-4">
-        <div class="card h-100 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="card-title-small mb-0">Academic Progress</h5>
-                <span class="badge" style="background: var(--genz-bg); color: var(--genz-text-muted);">Last 8 Months <i class='bx bx-chevron-down'></i></span>
-            </div>
-            <div class="d-flex align-items-center mb-2">
-                <span class="me-4" style="font-size: 12px; color: var(--genz-text-muted);"><i class='bx bxs-circle text-warning me-1'></i>Exams</span>
-                <span style="font-size: 12px; color: var(--genz-text-muted);"><i class='bx bxs-circle text-primary me-1'></i>Homework</span>
-            </div>
-            <div style="height: 200px;">
-                <canvas id="progressChart"></canvas>
-            </div>
+    <!-- Academic Progress -->
+    <div class="card p-3 p-md-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="card-section-title mb-0">Academic Progress</h6>
+            <span class="badge badge-filter">Last 8 Months <i class='bx bx-chevron-down'></i></span>
+        </div>
+        <div class="d-flex align-items-center mb-2 gap-3">
+            <span style="font-size: 11px; color: var(--es-text-secondary);"><i class='bx bxs-circle' style="color: var(--es-accent);"></i> Exams</span>
+            <span style="font-size: 11px; color: var(--es-text-secondary);"><i class='bx bxs-circle' style="color: var(--es-primary);"></i> Homework</span>
+        </div>
+        <div class="chart-container" style="height: 180px;">
+            <canvas id="progressChart"></canvas>
         </div>
     </div>
 </div>
 
-<div class="row">
+<!-- Notice & Attendance Row -->
+<div class="grid-2">
     <!-- Notice Board -->
-    <div class="col-md-6 mb-4">
-        <div class="card h-100 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="card-title-small mb-0">Notice Board</h5>
-                <span class="text-muted" style="font-size: 12px;">Sort by: <strong>Latest</strong> <i class='bx bx-chevron-down'></i></span>
+    <div class="card p-3 p-md-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="card-section-title mb-0">Notice Board</h6>
+            <span style="font-size: 11px; color: var(--es-text-secondary);">Sort by: <strong>Latest</strong> <i class='bx bx-chevron-down'></i></span>
+        </div>
+        
+        <div class="notice-list">
+            {% for notice in recent_notices %}
+            <div class="list-item-modern">
+                <div class="item-icon-square">
+                    <i class='bx bx-notepad'></i>
+                </div>
+                <div class="item-content">
+                    <h6 class="item-title">{{ notice.title }}</h6>
+                    <p class="item-desc mb-0">by {{ notice.author_name|default:"Admin" }}</p>
+                </div>
+                <div class="item-meta">
+                    {{ notice.created_at|date:"M d, Y" }}
+                </div>
             </div>
-            
-            <div class="notice-list">
-                {% for notice in recent_notices %}
-                <div class="list-item-modern">
-                    <div class="item-icon-square">
-                        <i class='bx bx-notepad'></i>
-                    </div>
-                    <div class="item-content">
-                        <h6 class="item-title">{{ notice.title }}</h6>
-                        <p class="item-desc mb-0">by {{ notice.author_name|default:"Admin" }}</p>
-                    </div>
-                    <div class="item-meta">
-                        {{ notice.created_at|date:"M d, Y" }}
-                    </div>
+            {% empty %}
+            <div class="list-item-modern">
+                <div class="item-icon-square">
+                    <i class='bx bx-calendar-event'></i>
                 </div>
-                {% empty %}
-                <div class="list-item-modern">
-                    <div class="item-icon-square">
-                        <i class='bx bx-calendar-event'></i>
-                    </div>
-                    <div class="item-content">
-                        <h6 class="item-title">School Event Reminder</h6>
-                        <p class="item-desc mb-0">by Ms. Harper, Event Coordinator</p>
-                    </div>
-                    <div class="item-meta">
-                        May 29, 2025
-                    </div>
+                <div class="item-content">
+                    <h6 class="item-title">School Event Reminder</h6>
+                    <p class="item-desc mb-0">by Ms. Harper, Event Coordinator</p>
                 </div>
-                <div class="list-item-modern">
-                    <div class="item-icon-square blue">
-                        <i class='bx bx-error-circle'></i>
-                    </div>
-                    <div class="item-content">
-                        <h6 class="item-title">Important Exam Update</h6>
-                        <p class="item-desc mb-0">by Principal Anderson</p>
-                    </div>
-                    <div class="item-meta">
-                        May 27, 2025
-                    </div>
+                <div class="item-meta">
+                    May 29, 2025
                 </div>
-                {% endfor %}
             </div>
+            <div class="list-item-modern">
+                <div class="item-icon-square blue">
+                    <i class='bx bx-error-circle'></i>
+                </div>
+                <div class="item-content">
+                    <h6 class="item-title">Important Exam Update</h6>
+                    <p class="item-desc mb-0">by Principal Anderson</p>
+                </div>
+                <div class="item-meta">
+                    May 27, 2025
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
     
-    <!-- Attendance -->
-    <div class="col-md-6 mb-4">
-        <div class="card h-100 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="card-title-small mb-0">Attendance Overview</h5>
-                <span class="badge" style="background: var(--genz-bg); color: var(--genz-text-muted);">Weekly <i class='bx bx-chevron-down'></i></span>
-            </div>
-            <div class="d-flex align-items-center mb-3">
-                <span class="me-4" style="font-size: 12px; color: var(--genz-text-muted);"><i class='bx bxs-circle text-warning me-1'></i>Present</span>
-                <span style="font-size: 12px; color: var(--genz-text-muted);"><i class='bx bxs-circle text-primary me-1'></i>Absent</span>
-            </div>
-            <div style="height: 180px;">
-                <canvas id="attendanceChart"></canvas>
-            </div>
+    <!-- Attendance Overview -->
+    <div class="card p-3 p-md-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="card-section-title mb-0">Attendance Overview</h6>
+            <span class="badge badge-filter">Weekly <i class='bx bx-chevron-down'></i></span>
+        </div>
+        <div class="d-flex align-items-center mb-2 gap-3">
+            <span style="font-size: 11px; color: var(--es-text-secondary);"><i class='bx bxs-circle' style="color: var(--es-accent);"></i> Present</span>
+            <span style="font-size: 11px; color: var(--es-text-secondary);"><i class='bx bxs-circle' style="color: var(--es-primary);"></i> Absent</span>
+        </div>
+        <div class="chart-container" style="height: 180px;">
+            <canvas id="attendanceChart"></canvas>
         </div>
     </div>
 </div>
@@ -178,7 +165,7 @@
     </div>
     
     <!-- Calendar Grid -->
-    <div class="cal-grid mb-4">
+    <div class="cal-grid">
         <div class="cal-day-name">Su</div>
         <div class="cal-day-name">Mo</div>
         <div class="cal-day-name">Tu</div>
@@ -230,8 +217,8 @@
     
     <!-- Upcoming Events -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0" style="font-size: 15px;">Upcoming Events</h6>
-        <i class='bx bx-dots-horizontal-rounded text-muted'></i>
+        <h6 class="sidebar-section-title mb-0">Upcoming Events</h6>
+        <i class='bx bx-dots-horizontal-rounded' style="color: var(--es-text-tertiary);"></i>
     </div>
     
     <div class="event-card">
@@ -267,8 +254,9 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Shared Chart Configuration
-        Chart.defaults.font.family = "'Google Sans', 'Kantumruy Pro', sans-serif";
+        Chart.defaults.font.family = "'Inter', 'Kantumruy Pro', sans-serif";
         Chart.defaults.color = '#64748B';
+        Chart.defaults.font.size = 11;
         
         // Check for injected data, use defaults if missing
         let genderData = [193, 234]; // Boys, Girls match reference
@@ -307,19 +295,17 @@
                     var width = chart.width, height = chart.height, ctx = chart.ctx;
                     ctx.restore();
                     
-                    // Total text
-                    var fontSizeTotal = (height / 140).toFixed(2);
-                    ctx.font = "500 " + fontSizeTotal + "em Google Sans";
+                    var fontSizeTotal = (height / 160).toFixed(2);
+                    ctx.font = "500 " + fontSizeTotal + "em Inter";
                     ctx.textBaseline = "middle";
-                    ctx.fillStyle = "#64748B";
+                    ctx.fillStyle = "#94A3B8";
                     var text2 = "Total",
                         text2X = Math.round((width - ctx.measureText(text2).width) / 2),
-                        text2Y = height / 2 - 15;
+                        text2Y = height / 2 - 14;
                     ctx.fillText(text2, text2X, text2Y);
 
-                    // Number text
-                    var fontSizeNum = (height / 80).toFixed(2);
-                    ctx.font = "700 " + fontSizeNum + "em Google Sans";
+                    var fontSizeNum = (height / 90).toFixed(2);
+                    ctx.font = "700 " + fontSizeNum + "em Inter";
                     ctx.fillStyle = "#1E293B";
                     var text = (genderData[0] + genderData[1]).toString(),
                         textX = Math.round((width - ctx.measureText(text).width) / 2),
@@ -334,12 +320,12 @@
         // 2. Progress Area Chart
         const ctxProgress = document.getElementById('progressChart').getContext('2d');
         
-        let gradientOrange = ctxProgress.createLinearGradient(0, 0, 0, 200);
-        gradientOrange.addColorStop(0, 'rgba(255, 184, 0, 0.4)');
+        let gradientOrange = ctxProgress.createLinearGradient(0, 0, 0, 180);
+        gradientOrange.addColorStop(0, 'rgba(255, 184, 0, 0.3)');
         gradientOrange.addColorStop(1, 'rgba(255, 184, 0, 0.0)');
         
-        let gradientBlue = ctxProgress.createLinearGradient(0, 0, 0, 200);
-        gradientBlue.addColorStop(0, 'rgba(30, 101, 255, 0.4)');
+        let gradientBlue = ctxProgress.createLinearGradient(0, 0, 0, 180);
+        gradientBlue.addColorStop(0, 'rgba(30, 101, 255, 0.3)');
         gradientBlue.addColorStop(1, 'rgba(30, 101, 255, 0.0)');
 
         let progressLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
@@ -356,22 +342,22 @@
                         data: progressDataExam,
                         borderColor: '#FFB800',
                         backgroundColor: gradientOrange,
-                        borderWidth: 3,
+                        borderWidth: 2.5,
                         tension: 0.4,
                         fill: true,
                         pointRadius: 0,
-                        pointHoverRadius: 6
+                        pointHoverRadius: 5
                     },
                     {
                         label: 'Homework',
                         data: progressDataHW,
                         borderColor: '#1E65FF',
                         backgroundColor: gradientBlue,
-                        borderWidth: 3,
+                        borderWidth: 2.5,
                         tension: 0.4,
                         fill: true,
                         pointRadius: 0,
-                        pointHoverRadius: 6
+                        pointHoverRadius: 5
                     }
                 ]
             },
@@ -384,12 +370,11 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: { borderDash: [5, 5], color: '#E2E8F0', drawBorder: false },
-                        ticks: { stepSize: 25, callback: function(value) { return value + 'K'; }, font: {size: 11} }
+                        grid: { borderDash: [4, 4], color: '#E2E8F0', drawBorder: false },
+                        ticks: { stepSize: 25, callback: function(value) { return value + 'K'; } }
                     },
                     x: {
-                        grid: { display: false, drawBorder: false },
-                        ticks: { font: {size: 11} }
+                        grid: { display: false, drawBorder: false }
                     }
                 }
             }
@@ -406,15 +391,15 @@
                         label: 'Present',
                         data: [70, 80, 75, 90, 85],
                         backgroundColor: '#FFB800',
-                        borderRadius: {topLeft: 0, topRight: 0, bottomLeft: 8, bottomRight: 8},
-                        barPercentage: 0.4
+                        borderRadius: {topLeft: 0, topRight: 0, bottomLeft: 6, bottomRight: 6},
+                        barPercentage: 0.45
                     },
                     {
                         label: 'Absent',
                         data: [30, 20, 25, 10, 15],
                         backgroundColor: '#1E65FF',
-                        borderRadius: {topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0},
-                        barPercentage: 0.4
+                        borderRadius: {topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0},
+                        barPercentage: 0.45
                     }
                 ]
             },
@@ -429,13 +414,12 @@
                         stacked: true,
                         beginAtZero: true,
                         max: 100,
-                        grid: { borderDash: [5, 5], color: '#E2E8F0', drawBorder: false },
-                        ticks: { stepSize: 25, callback: function(value) { return value + '%'; }, font: {size: 11} }
+                        grid: { borderDash: [4, 4], color: '#E2E8F0', drawBorder: false },
+                        ticks: { stepSize: 25, callback: function(value) { return value + '%'; } }
                     },
                     x: {
                         stacked: true,
-                        grid: { display: false, drawBorder: false },
-                        ticks: { font: {size: 11} }
+                        grid: { display: false, drawBorder: false }
                     }
                 }
             }

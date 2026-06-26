@@ -3,48 +3,50 @@
 {% block header_title %}Class Management{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0 text-dark">All Classes</h4>
-    <a href="{% url 'management:class_create' %}" class="btn btn-primary" style="border-radius: 12px; padding: 10px 20px;">
-        <i class="bx bx-plus me-1"></i> Create Class
-    </a>
+<div class="page-header">
+    <h4 class="page-header-title">All Classes</h4>
+    <div class="page-header-actions">
+        <a href="{% url 'management:class_create' %}" class="btn btn-primary">
+            <i class="bx bx-plus"></i> Create Class
+        </a>
+    </div>
 </div>
 
-<div class="row">
+<div class="grid-3">
     {% for course in courses %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow); transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.08)';" onmouseout="this.style.transform='none'; this.style.boxShadow='var(--genz-shadow)';">
-            <div class="card-body p-4 text-center">
-                <div style="width: 64px; height: 64px; border-radius: 16px; background: rgba(30, 101, 255, 0.1); color: var(--genz-primary); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px;">
-                    <i class="bx bx-book-content"></i>
-                </div>
-                <h5 class="fw-bold text-dark mb-1">{{ course.class_name }}</h5>
-                <p class="text-muted mb-3" style="font-size: 14px;">{{ course.student_count }} Enrolled Students</p>
-                
-                <div class="d-flex justify-content-center gap-2 mt-4">
-                    <a href="{% url 'management:class_detail' course.id %}" class="btn btn-sm btn-outline-primary" style="border-radius: 8px;">
-                        <i class="bx bx-show me-1"></i> View
-                    </a>
-                    <a href="{% url 'management:class_edit' course.id %}" class="btn btn-sm btn-outline-secondary" style="border-radius: 8px;">
-                        <i class="bx bx-edit-alt"></i>
-                    </a>
-                    <a href="{% url 'management:class_delete' course.id %}" class="btn btn-sm btn-outline-danger" style="border-radius: 8px;">
-                        <i class="bx bx-trash"></i>
-                    </a>
-                </div>
+    <div class="card class-card">
+        <div class="card-body p-4 text-center">
+            <div class="class-card-icon">
+                <i class="bx bx-book-content"></i>
+            </div>
+            <h6 class="fw-bold mb-1" style="color: var(--es-text);">{{ course.class_name }}</h6>
+            <p class="mb-3" style="font-size: 13px; color: var(--es-text-secondary);">{{ course.student_count }} Enrolled Students</p>
+            
+            <div class="d-flex justify-content-center gap-2">
+                <a href="{% url 'management:class_detail' course.id %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bx bx-show"></i> View
+                </a>
+                <a href="{% url 'management:class_edit' course.id %}" class="btn btn-sm btn-outline-secondary" style="border-radius: 8px;">
+                    <i class="bx bx-edit-alt"></i>
+                </a>
+                <a href="{% url 'management:class_delete' course.id %}" class="btn btn-sm btn-outline-danger" style="border-radius: 8px;">
+                    <i class="bx bx-trash"></i>
+                </a>
             </div>
         </div>
     </div>
     {% empty %}
-    <div class="col-12 text-center py-5">
-        <div style="width: 80px; height: 80px; background: #F8FAFC; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-            <i class="bx bx-book-add" style="font-size: 40px; color: #CBD5E1;"></i>
+    <div style="grid-column: 1 / -1;">
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bx bx-book-add"></i>
+            </div>
+            <div class="empty-state-title">No Classes Yet</div>
+            <p class="empty-state-desc">Get started by creating your first class to assign students and homework.</p>
+            <a href="{% url 'management:class_create' %}" class="btn btn-primary">
+                <i class="bx bx-plus"></i> Create Class
+            </a>
         </div>
-        <h5 class="fw-bold text-dark">No Classes Yet</h5>
-        <p class="text-muted">Get started by creating your first class to assign students and homework.</p>
-        <a href="{% url 'management:class_create' %}" class="btn btn-primary mt-3" style="border-radius: 12px; padding: 10px 20px;">
-            <i class="bx bx-plus me-1"></i> Create Class
-        </a>
     </div>
     {% endfor %}
 </div>

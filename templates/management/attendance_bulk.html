@@ -4,124 +4,122 @@
 {% block header_title %}Take Attendance{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0 text-dark">
-        <a href="{% url 'management:attendance_view' %}" class="text-muted text-decoration-none"><i class='bx bx-arrow-back me-2'></i>Attendance</a>
+<div class="page-header">
+    <h4 class="page-header-title">
+        <a href="{% url 'management:attendance_view' %}" class="text-decoration-none" style="color: var(--es-text-secondary);"><i class='bx bx-arrow-back me-2'></i>Attendance</a>
     </h4>
 </div>
 
-<div class="row">
-    <!-- Selection Panel -->
-    <div class="col-md-12 mb-4">
-        <div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
-            <div class="card-body p-4">
-                <form method="post" class="row gx-4 gy-3 align-items-end">
-                    {% csrf_token %}
-                    <div class="col-md-4">
-                        <label class="form-label text-muted fw-bold">Select Class</label>
-                        <select class="form-select" id="courseSelect" name="course" required style="font-size: 15px;">
-                            <option value="">Choose...</option>
-                            {% for c in courses %}
-                            <option value="{{ c.id }}" {% if selected_course and selected_course.id == c.id %}selected{% endif %}>{{ c.class_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label text-muted fw-bold">Date</label>
-                        <input type="date" class="form-control" id="dateSelect" name="date" value="{{ selected_date }}" required style="font-size: 15px;">
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary w-100" style="border-radius: 12px; padding: 10px 0;">Load Students</button>
-                    </div>
-                </form>
+<!-- Selection Panel -->
+<div class="card mb-4">
+    <div class="card-body p-3 p-md-4">
+        <form method="post" class="row gx-3 gy-3 align-items-end">
+            {% csrf_token %}
+            <div class="col-12 col-md-4">
+                <label class="form-label">Select Class</label>
+                <select class="form-select" id="courseSelect" name="course" required>
+                    <option value="">Choose...</option>
+                    {% for c in courses %}
+                    <option value="{{ c.id }}" {% if selected_course and selected_course.id == c.id %}selected{% endif %}>{{ c.class_name }}</option>
+                    {% endfor %}
+                </select>
             </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-control" id="dateSelect" name="date" value="{{ selected_date }}" required>
+            </div>
+            <div class="col-6 col-md-4">
+                <button type="submit" class="btn btn-primary w-100">Load Students</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Attendance Grid -->
+{% if selected_course %}
+<div class="card">
+    <div class="card-header-clean d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h6 class="card-section-title mb-0">Attendance for {{ selected_course.class_name }}</h6>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="badge badge-filter"><i class="bx bx-calendar-event me-1"></i> {{ selected_date }}</span>
+            <button type="button" class="btn btn-sm btn-outline-success" id="markAllPresentBtn">
+                <i class="bx bx-check-double me-1"></i> Mark All Present
+            </button>
         </div>
     </div>
-
-    <!-- Attendance Grid -->
-    {% if selected_course %}
-    <div class="col-md-12">
-        <div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
-            <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-dark">Attendance for {{ selected_course.class_name }}</h5>
-                <div class="d-flex align-items-center">
-                    <span class="badge me-3" style="background: #F1F5F9; color: #475569; padding: 8px 16px; border-radius: 8px;"><i class="bx bx-calendar-event me-1"></i> {{ selected_date }}</span>
-                    <button type="button" class="btn btn-sm btn-outline-success" id="markAllPresentBtn" style="border-radius: 8px;">
-                        <i class="bx bx-check-double me-1"></i> Mark All Present
-                    </button>
-                </div>
+    
+    {% if success %}
+    <div class="p-3 pb-0">
+        <div class="alert alert-success border-0 text-white shadow-sm" style="background-color: var(--es-success);" role="alert">
+            <div class="d-flex align-items-center">
+                <i class='bx bx-check-circle fs-4 me-2'></i>
+                <span>{{ success }}</span>
             </div>
-            
-            {% if success %}
-            <div class="card-body pb-0 pt-4">
-                <div class="alert alert-success border-0 text-white shadow-sm" style="background-color: #10B981; border-radius: 12px;" role="alert">
-                    <div class="d-flex align-items-center">
-                        <i class='bx bx-check-circle fs-3 me-3'></i>
-                        <span>{{ success }}</span>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="course" value="{{ selected_course.id }}">
-                <input type="hidden" name="date" value="{{ selected_date }}">
-                <input type="hidden" name="save_attendance" value="1">
-                
-                <div class="table-responsive text-nowrap">
-                    <table class="table table-hover mb-0">
-                        <thead style="background-color: #F8FAFC;">
-                            <tr>
-                                <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">ID</th>
-                                <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Student Name</th>
-                                <th class="text-uppercase text-center" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                            {% for item in students %}
-                            <tr style="transition: all 0.2s ease;">
-                                <td style="padding: 16px 24px !important;"><strong>{{ item.student.student_id }}</strong></td>
-                                <td style="padding: 16px 24px !important; font-weight: 600;">{{ item.student.name }}</td>
-                                <input type="hidden" name="student_ids" value="{{ item.student.id }}">
-                                <td style="padding: 16px 24px !important;" class="text-center">
-                                    <div class="btn-group" role="group" aria-label="Attendance Status">
-                                        <input type="radio" class="btn-check btn-present" name="status_{{ item.student.id }}" id="present_{{ item.student.id }}" value="Present" autocomplete="off" {% if item.status == 'Present' %}checked{% endif %}>
-                                        <label class="btn btn-outline-success" for="present_{{ item.student.id }}" style="padding: 6px 16px; font-weight: 600;">Present</label>
-
-                                        <input type="radio" class="btn-check btn-absent" name="status_{{ item.student.id }}" id="absent_{{ item.student.id }}" value="Absent" autocomplete="off" {% if item.status == 'Absent' %}checked{% endif %}>
-                                        <label class="btn btn-outline-danger" for="absent_{{ item.student.id }}" style="padding: 6px 16px; font-weight: 600;">Absent</label>
-
-                                        <input type="radio" class="btn-check btn-late" name="status_{{ item.student.id }}" id="late_{{ item.student.id }}" value="Late" autocomplete="off" {% if item.status == 'Late' %}checked{% endif %}>
-                                        <label class="btn btn-outline-warning" for="late_{{ item.student.id }}" style="padding: 6px 16px; font-weight: 600;">Late</label>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="3" class="text-center py-5 text-muted">
-                                    <i class="bx bx-group" style="font-size: 40px; color: #CBD5E1; margin-bottom: 10px;"></i><br>
-                                    No students are currently enrolled in this class.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-                {% if students %}
-                <div class="card-footer bg-white border-top p-4 d-flex justify-content-between align-items-center">
-                    <span class="text-muted" style="font-size: 13px;"><i class='bx bx-info-circle me-1'></i>Tip: Unmarked students are ignored. Ensure all rows are selected.</span>
-                    <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 12px; background-color: var(--genz-primary); border: none;">
-                        <i class="bx bx-save me-1"></i> Save Attendance
-                    </button>
-                </div>
-                {% endif %}
-            </form>
         </div>
     </div>
     {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="course" value="{{ selected_course.id }}">
+        <input type="hidden" name="date" value="{{ selected_date }}">
+        <input type="hidden" name="save_attendance" value="1">
+        
+        <div class="table-responsive">
+            <table class="table table-clean mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in students %}
+                    <tr>
+                        <td class="td-bold">{{ item.student.student_id }}</td>
+                        <td class="td-bold">{{ item.student.name }}</td>
+                        <input type="hidden" name="student_ids" value="{{ item.student.id }}">
+                        <td class="text-center">
+                            <div class="btn-group" role="group" aria-label="Attendance Status">
+                                <input type="radio" class="btn-check btn-present" name="status_{{ item.student.id }}" id="present_{{ item.student.id }}" value="Present" autocomplete="off" {% if item.status == 'Present' %}checked{% endif %}>
+                                <label class="btn btn-outline-success" for="present_{{ item.student.id }}">Present</label>
+
+                                <input type="radio" class="btn-check btn-absent" name="status_{{ item.student.id }}" id="absent_{{ item.student.id }}" value="Absent" autocomplete="off" {% if item.status == 'Absent' %}checked{% endif %}>
+                                <label class="btn btn-outline-danger" for="absent_{{ item.student.id }}">Absent</label>
+
+                                <input type="radio" class="btn-check btn-late" name="status_{{ item.student.id }}" id="late_{{ item.student.id }}" value="Late" autocomplete="off" {% if item.status == 'Late' %}checked{% endif %}>
+                                <label class="btn btn-outline-warning" for="late_{{ item.student.id }}">Late</label>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bx bx-group"></i>
+                                </div>
+                                <p class="empty-state-desc">No students are currently enrolled in this class.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if students %}
+        <div class="p-3 p-md-4 d-flex justify-content-between align-items-center flex-wrap gap-2" style="border-top: 1px solid var(--es-border);">
+            <span style="font-size: 12px; color: var(--es-text-secondary);"><i class='bx bx-info-circle me-1'></i>Tip: Unmarked students are ignored.</span>
+            <button type="submit" class="btn btn-primary">
+                <i class="bx bx-save"></i> Save Attendance
+            </button>
+        </div>
+        {% endif %}
+    </form>
 </div>
+{% endif %}
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -138,18 +136,23 @@
 </script>
 
 <style>
-    /* Improve visual feedback of the button groups */
-    .btn-outline-success { border-color: #E2E8F0; color: #64748B; }
-    .btn-check:checked + .btn-outline-success { background-color: #10B981; border-color: #10B981; color: white; }
+    /* Radio button group styling */
+    .btn-outline-success { border-color: var(--es-border); color: var(--es-text-secondary); font-size: 12px; padding: 5px 14px; font-weight: 600; }
+    .btn-check:checked + .btn-outline-success { background-color: var(--es-success); border-color: var(--es-success); color: white; }
     
-    .btn-outline-danger { border-color: #E2E8F0; color: #64748B; }
-    .btn-check:checked + .btn-outline-danger { background-color: #EF4444; border-color: #EF4444; color: white; }
+    .btn-outline-danger { border-color: var(--es-border); color: var(--es-text-secondary); font-size: 12px; padding: 5px 14px; font-weight: 600; }
+    .btn-check:checked + .btn-outline-danger { background-color: var(--es-danger); border-color: var(--es-danger); color: white; }
     
-    .btn-outline-warning { border-color: #E2E8F0; color: #64748B; }
-    .btn-check:checked + .btn-outline-warning { background-color: #F59E0B; border-color: #F59E0B; color: white; }
+    .btn-outline-warning { border-color: var(--es-border); color: var(--es-text-secondary); font-size: 12px; padding: 5px 14px; font-weight: 600; }
+    .btn-check:checked + .btn-outline-warning { background-color: var(--es-warning); border-color: var(--es-warning); color: white; }
     
     .btn-group .btn { border-radius: 6px; margin: 0 2px; }
-    .btn-group > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn.dropdown-toggle-split:first-child, .btn-group > .btn-group:not(:last-child) > .btn { border-top-right-radius: 6px; border-bottom-right-radius: 6px; }
-    .btn-group > .btn:nth-child(n+3), .btn-group > :not(.btn-check) + .btn, .btn-group > .btn-group:not(:first-child) > .btn { border-top-left-radius: 6px; border-bottom-left-radius: 6px; }
+    .btn-group > .btn:not(:last-child):not(.dropdown-toggle) { border-top-right-radius: 6px; border-bottom-right-radius: 6px; }
+    .btn-group > .btn:nth-child(n+3), .btn-group > :not(.btn-check) + .btn { border-top-left-radius: 6px; border-bottom-left-radius: 6px; }
+
+    @media (max-width: 575px) {
+        .btn-group { flex-direction: column; width: 100%; }
+        .btn-group .btn { margin: 2px 0; border-radius: 6px !important; }
+    }
 </style>
 {% endblock %}

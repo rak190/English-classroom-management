@@ -4,25 +4,27 @@
 {% block header_title %}Class Schedule{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0 text-dark">My Schedule</h4>
-    <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#scheduleForm" aria-expanded="false" aria-controls="scheduleForm" style="border-radius: 12px; padding: 10px 20px;">
-        <i class="bx bx-plus me-1"></i> Add Class Session
-    </button>
+<div class="page-header">
+    <h4 class="page-header-title">My Schedule</h4>
+    <div class="page-header-actions">
+        <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#scheduleForm" aria-expanded="false" aria-controls="scheduleForm">
+            <i class="bx bx-plus"></i> Add Class Session
+        </button>
+    </div>
 </div>
 
 <!-- Add Schedule Form -->
 <div class="collapse mb-4" id="scheduleForm">
-    <div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
-        <div class="card-header bg-white border-bottom p-4">
-            <h5 class="mb-0 fw-bold text-dark">Schedule New Session</h5>
+    <div class="card">
+        <div class="card-header-clean">
+            <h6 class="card-section-title mb-0">Schedule New Session</h6>
         </div>
-        <div class="card-body p-4">
-            <form method="post" class="row gx-4 gy-3">
+        <div class="card-body p-3 p-md-4">
+            <form method="post" class="row gx-3 gy-3">
                 {% csrf_token %}
                 {% if form.errors %}
                     <div class="col-12">
-                        <div class="alert alert-danger" style="border-radius: 12px;">
+                        <div class="alert alert-danger">
                             Please correct the errors below:
                             <ul class="mb-0 mt-2">
                             {% for field in form %}
@@ -37,59 +39,64 @@
                         </div>
                     </div>
                 {% endif %}
-                <div class="col-md-3">
-                    <label class="form-label text-muted fw-bold">Course</label>
-                    {% render_field form.course class="form-select" style="border-radius: 12px; padding: 10px 16px;" %}
+                <div class="col-6 col-md-3">
+                    <label class="form-label">Course</label>
+                    {% render_field form.course class="form-select" %}
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label text-muted fw-bold">Day of Week</label>
-                    {% render_field form.day class="form-select" style="border-radius: 12px; padding: 10px 16px;" %}
+                <div class="col-6 col-md-3">
+                    <label class="form-label">Day of Week</label>
+                    {% render_field form.day class="form-select" %}
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label text-muted fw-bold">Start Time</label>
-                    {% render_field form.start_time type="time" class="form-control" style="border-radius: 12px; padding: 10px 16px;" %}
+                <div class="col-6 col-md-3">
+                    <label class="form-label">Start Time</label>
+                    {% render_field form.start_time type="time" class="form-control" %}
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label text-muted fw-bold">End Time</label>
-                    {% render_field form.end_time type="time" class="form-control" style="border-radius: 12px; padding: 10px 16px;" %}
+                <div class="col-6 col-md-3">
+                    <label class="form-label">End Time</label>
+                    {% render_field form.end_time type="time" class="form-control" %}
                 </div>
-                <div class="col-12 mt-4 text-end">
-                    <button type="submit" class="btn btn-primary px-4 py-2" style="border-radius: 12px;"><i class="bx bx-save me-1"></i> Save Schedule</button>
+                <div class="col-12 text-end mt-2">
+                    <button type="submit" class="btn btn-primary"><i class="bx bx-save"></i> Save Schedule</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
-    <div class="card-header bg-white border-bottom p-4">
-        <h5 class="mb-0 fw-bold text-dark">Weekly Timetable</h5>
+<div class="card">
+    <div class="card-header-clean">
+        <h6 class="card-section-title mb-0">Weekly Timetable</h6>
     </div>
-    <div class="table-responsive text-nowrap">
-        <table class="table table-hover mb-0">
-            <thead style="background-color: #F8FAFC;">
+    <div class="table-responsive">
+        <table class="table table-clean mb-0">
+            <thead>
                 <tr>
-                    <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Day</th>
-                    <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Class</th>
-                    <th class="text-uppercase" style="font-size: 11px; font-weight: 700; color: #64748B; padding: 16px 24px !important;">Time</th>
+                    <th>Day</th>
+                    <th>Class</th>
+                    <th>Time</th>
                 </tr>
             </thead>
-            <tbody class="table-border-bottom-0">
+            <tbody>
                 {% for schedule in schedules %}
-                <tr style="transition: all 0.2s ease;">
-                    <td style="padding: 16px 24px !important;">
-                        <span class="badge" style="background: rgba(30, 101, 255, 0.1); color: var(--genz-primary);">{{ schedule.get_day_display }}</span>
+                <tr>
+                    <td>
+                        <span class="badge" style="background: var(--es-primary-light); color: var(--es-primary);">{{ schedule.get_day_display }}</span>
                     </td>
-                    <td style="padding: 16px 24px !important; font-weight: 600;">{{ schedule.course.class_name }}</td>
-                    <td style="padding: 16px 24px !important;">
-                        <i class="bx bx-time text-muted me-1"></i> {{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }}
+                    <td class="td-bold">{{ schedule.course.class_name }}</td>
+                    <td class="td-muted">
+                        <i class="bx bx-time me-1" style="color: var(--es-text-tertiary);"></i> {{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }}
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="3" class="text-center py-5 text-muted">
-                        <i class="bx bx-calendar-x" style="font-size: 40px; color: #CBD5E1; margin-bottom: 10px;"></i><br>
-                        No classes scheduled yet.
+                    <td colspan="3">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="bx bx-calendar-x"></i>
+                            </div>
+                            <div class="empty-state-title">No Schedule</div>
+                            <p class="empty-state-desc">No classes scheduled yet. Add a session above to get started.</p>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}

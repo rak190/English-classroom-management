@@ -1,29 +1,29 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 
-{% block title %}Add Student - ECMS{% endblock %}
-{% block header_title %}Add New Student{% endblock %}
+{% block title %}{% if is_edit %}Edit{% else %}Add{% endif %} Student - ECMS{% endblock %}
+{% block header_title %}{% if is_edit %}Edit{% else %}Add New{% endif %} Student{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0 text-dark">
-        <a href="{% url 'management:student_list' %}" class="text-muted text-decoration-none"><i class='bx bx-arrow-back me-2'></i>Students</a>
+<div class="page-header">
+    <h4 class="page-header-title">
+        <a href="{% url 'management:student_list' %}" class="text-decoration-none" style="color: var(--es-text-secondary);"><i class='bx bx-arrow-back me-2'></i>Students</a>
     </h4>
 </div>
 
 <div class="row">
     <div class="col-xl-8 mx-auto">
-        <div class="card border-0" style="border-radius: var(--genz-radius); box-shadow: var(--genz-shadow);">
-            <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-dark">Student Information</h5>
-                <span class="badge" style="background: rgba(30, 101, 255, 0.1); color: var(--genz-primary); padding: 8px 16px; border-radius: 8px;">Enrollment Form</span>
+        <div class="card">
+            <div class="card-header-clean d-flex justify-content-between align-items-center">
+                <h6 class="card-section-title mb-0">Student Information</h6>
+                <span class="badge" style="background: var(--es-primary-light); color: var(--es-primary);">Enrollment Form</span>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body p-3 p-md-4">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     
                     {% if form.errors %}
-                        <div class="alert alert-danger mb-4" style="border-radius: 12px;">
+                        <div class="alert alert-danger mb-4">
                             Please correct the errors below:
                             <ul class="mb-0 mt-2">
                             {% for field in form %}
@@ -38,47 +38,47 @@
                         </div>
                     {% endif %}
                     
-                    <div class="row gx-4 gy-4">
+                    <div class="row gx-3 gy-3">
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold" for="id_student_id">Student ID</label>
-                            {% render_field form.student_id class="form-control" placeholder="e.g. STU-001" id="id_student_id" style="border-radius: 12px; padding: 12px 16px;" %}
+                            <label class="form-label" for="id_student_id">Student ID</label>
+                            {% render_field form.student_id class="form-control" placeholder="e.g. STU-001" id="id_student_id" %}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold" for="id_name">Full Name</label>
-                            {% render_field form.name class="form-control" placeholder="e.g. Sok Dara" id="id_name" style="border-radius: 12px; padding: 12px 16px;" %}
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold" for="id_gender">Gender</label>
-                            {% render_field form.gender class="form-select" id="id_gender" style="border-radius: 12px; padding: 12px 16px;" %}
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold" for="id_grade">Grade Level</label>
-                            {% render_field form.grade class="form-control" placeholder="e.g. Grade 8" id="id_grade" style="border-radius: 12px; padding: 12px 16px;" %}
+                            <label class="form-label" for="id_name">Full Name</label>
+                            {% render_field form.name class="form-control" placeholder="e.g. Sok Dara" id="id_name" %}
                         </div>
                         
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold" for="id_phone">Student Phone (Optional)</label>
-                            {% render_field form.phone class="form-control" placeholder="Phone number" id="id_phone" style="border-radius: 12px; padding: 12px 16px;" %}
+                            <label class="form-label" for="id_gender">Gender</label>
+                            {% render_field form.gender class="form-select" id="id_gender" %}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold" for="id_parent_phone">Parent Phone <span class="text-danger">*</span></label>
-                            {% render_field form.parent_phone class="form-control" placeholder="Parent phone number" id="id_parent_phone" style="border-radius: 12px; padding: 12px 16px;" %}
+                            <label class="form-label" for="id_grade">Grade Level</label>
+                            {% render_field form.grade class="form-control" placeholder="e.g. Grade 8" id="id_grade" %}
                         </div>
                         
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold" for="id_join_date">Join Date</label>
-                            {% render_field form.join_date class="form-control" id="id_join_date" style="border-radius: 12px; padding: 12px 16px;" %}
+                            <label class="form-label" for="id_phone">Student Phone (Optional)</label>
+                            {% render_field form.phone class="form-control" placeholder="Phone number" id="id_phone" %}
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold" for="id_photo">Photo</label>
-                            {% render_field form.photo class="form-control" id="id_photo" style="border-radius: 12px; padding: 9px 16px;" %}
+                            <label class="form-label" for="id_parent_phone">Parent Phone <span class="text-danger">*</span></label>
+                            {% render_field form.parent_phone class="form-control" placeholder="Parent phone number" id="id_parent_phone" %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_join_date">Join Date</label>
+                            {% render_field form.join_date class="form-control" id="id_join_date" %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="id_photo">Photo</label>
+                            {% render_field form.photo class="form-control" id="id_photo" %}
                         </div>
                     </div>
                     
-                    <div class="mt-5 d-flex gap-3">
-                        <button type="submit" class="btn btn-primary px-4 py-3 flex-grow-1" style="border-radius: 12px; font-weight: 600;">Save Student</button>
-                        <a href="{% url 'management:student_list' %}" class="btn btn-outline-secondary px-4 py-3" style="border-radius: 12px;">Cancel</a>
+                    <div class="mt-4 d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-primary flex-grow-1">Save Student</button>
+                        <a href="{% url 'management:student_list' %}" class="btn btn-outline-secondary">Cancel</a>
                     </div>
                 </form>
             </div>

@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="km" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{% static 'sneat/' %}" data-template="vertical-menu-template-free">
+<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default" data-assets-path="{% static 'sneat/' %}" data-template="vertical-menu-template-free">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -22,7 +22,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <!-- Core CSS (Kept for basic resets/grid if needed, but overridden heavily) -->
@@ -51,7 +52,7 @@
                     <div class="app-brand">
                         <a href="{% url 'management:dashboard' %}" class="d-flex align-items-center text-decoration-none">
                             <div class="app-brand-logo">
-                                <span class="fw-bold fs-5 text-white d-flex align-items-center justify-content-center h-100 w-100" style="font-family: 'Inter', sans-serif;">///</span>
+                                <span class="fw-bold text-white d-flex align-items-center justify-content-center h-100 w-100" style="font-family: 'Inter', sans-serif; font-size: 14px;">///</span>
                             </div>
                             <span class="app-brand-text ms-3">Edusync</span>
                         </a>
@@ -110,7 +111,7 @@
                             </a>
                         </li>
                         
-                        <li class="menu-header mt-4"></li>
+                        <li class="menu-header mt-3"></li>
                         <li class="menu-item {% if 'ai' in request.resolver_match.url_name %}active{% endif %}">
                             <a href="{% url 'management:ai_dashboard' %}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-bot"></i>
@@ -145,38 +146,41 @@
                     </ul>
                 </aside>
 
+                <!-- Mobile overlay -->
+                <div class="layout-overlay" onclick="document.documentElement.classList.remove('layout-menu-expanded');"></div>
+
                 <!-- Center Main Content -->
                 <div class="layout-page">
                     <!-- Top Navbar -->
                     <nav class="layout-navbar container-fluid d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
-                            <a class="nav-item nav-link px-0 me-xl-4 d-xl-none text-dark layout-menu-toggle" href="javascript:void(0)">
-                                <i class="bx bx-menu bx-sm"></i>
+                            <a class="layout-menu-toggle" href="javascript:void(0)">
+                                <i class="bx bx-menu"></i>
                             </a>
-                            <h3 class="mb-0 fw-bold d-none d-md-block">{% block header_title %}Dashboard{% endblock %}</h3>
+                            <h3 class="mb-0 d-none d-md-block">{% block header_title %}Dashboard{% endblock %}</h3>
                         </div>
 
-                        <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center gap-2">
                             <div class="search-bar d-none d-md-flex">
-                                <i class="bx bx-search text-muted fs-5"></i>
+                                <i class="bx bx-search" style="color: var(--es-text-tertiary); font-size: 16px;"></i>
                                 <input type="text" placeholder="Search">
                             </div>
                             <div class="mic-icon d-none d-md-flex">
-                                <i class="bx bx-microphone fs-5"></i>
+                                <i class="bx bx-microphone" style="font-size: 16px;"></i>
                             </div>
                             
                             <!-- Profile & Notifications -->
-                            <div class="d-flex align-items-center ms-md-4">
-                                <div class="profile-avatar mb-0 me-3" style="width: 44px; height: 44px; font-size: 16px;">
-                                    <img src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=FFB800&color=FFFFFF" alt="" class="w-100 h-100 rounded-circle">
+                            <div class="d-flex align-items-center ms-md-2">
+                                <div class="nav-profile-avatar">
+                                    <img src="https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username }}&background=FFB800&color=FFFFFF&size=76" alt="">
                                 </div>
-                                <div class="profile-info d-none d-md-block me-3">
-                                    <h6 class="profile-name mb-0" style="font-size: 15px; font-weight: 700;">{{ request.user.first_name|default:request.user.username }}</h6>
-                                    <p class="profile-role mb-0" style="font-size: 12px; color: #94A3B8;">Admin</p>
+                                <div class="nav-profile-info d-none d-md-block">
+                                    <div class="nav-profile-name">{{ request.user.first_name|default:request.user.username }}</div>
+                                    <div class="nav-profile-role">Admin</div>
                                 </div>
-                                <div class="bell-icon position-relative d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 20px; color: var(--genz-text-main); cursor: pointer; border: none; background: #F8FAFC; border-radius: 50%;">
+                                <div class="nav-bell">
                                     <i class="bx bx-bell"></i>
-                                    <span class="bell-dot position-absolute" style="top: 10px; right: 10px; width: 8px; height: 8px; background-color: #EF4444; border-radius: 50%; border: 2px solid #F8FAFC;"></span>
+                                    <span class="nav-bell-dot"></span>
                                 </div>
                             </div>
                         </div>
@@ -202,6 +206,19 @@
     <script src="{% static 'sneat/vendor/libs/popper/popper.js' %}"></script>
     <script src="{% static 'sneat/vendor/js/bootstrap.js' %}"></script>
     
+    <!-- Mobile menu toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggleBtn = document.querySelector('.layout-menu-toggle');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.documentElement.classList.toggle('layout-menu-expanded');
+                });
+            }
+        });
+    </script>
+
     <!-- PWA -->
     <script>
         if ('serviceWorker' in navigator) {
